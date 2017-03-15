@@ -1,3 +1,5 @@
-/Math.class
-/Bodies.class
-/Collisons.class
+/MathVector.class
+/Vector2d.class
+/Vector2D.class
+/OverArc.class
+/Collisions.class
