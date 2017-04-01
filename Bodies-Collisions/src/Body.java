@@ -170,4 +170,88 @@ public class Body {
 		}
 	}
 
+	/**
+	 * @return the position
+	 */
+	public Point getPosition() {
+		return position;
+	}
+
+	/**
+	 * @param position the position to set
+	 */
+	public void setPosition(Point position) {
+		this.position = position;
+	}
+
+	/**
+	 * @return the velocity
+	 */
+	public Point getVelocity() {
+		return velocity;
+	}
+
+	/**
+	 * @param velocity the velocity to set
+	 */
+	public void setVelocity(Point velocity) {
+		this.velocity = velocity;
+	}
+
+	/**
+	 * @return the force
+	 */
+	public Point getForce() {
+		return force;
+	}
+
+	/**
+	 * @param force the force to set
+	 */
+	public void setForce(Point force) {
+		this.force = force;
+	}
+
+	/**
+	 * @return the deltaTime
+	 */
+	public static double getDeltaTime() {
+		return deltaTime;
+	}
+
+	/**
+	 * @param deltaTime the deltaTime to set
+	 */
+	public static void setDeltaTime(double deltaTime) {
+		Body.deltaTime = deltaTime;
+	}
+
+	/**
+	 * @return the mass
+	 */
+	public double getMass() {
+		return mass;
+	}
+
+	/**
+	 * @return the radius
+	 */
+	public double getRadius() {
+		return radius;
+	}
+
+	/**
+	 * @return the allbodies
+	 */
+	public static ArrayList<Body> getAllbodies() {
+		return allBodies;
+	}
+
+	/**
+	 * @return the gravity
+	 */
+	public static double getGravity() {
+		return gravity;
+	}
+
 }
