@@ -6,7 +6,7 @@ import java.util.Vector;
  */
 public class Collisions {
 	private double gravity;
-	private Vector<Bodies> others;
+	private Vector<Body> others;
 	public Collisions() {
 	}
 
