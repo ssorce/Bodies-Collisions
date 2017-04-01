@@ -15,6 +15,20 @@ public class Body {
 	private final double radius;
 	private static final ArrayList<Body> allBodies = new ArrayList<>();
 	private static final double gravity = 6.67e-11;
+	
+	
+	public static void main(String[] args){
+		/*
+		 * Create bodies
+		 * 
+		 * run program
+		 * for(int i = startTime; i < endTime; i+=deltaTime){
+		 *   calculateForces();
+		 *   moveBodies();
+		 * }
+		 * end of program
+		 */
+	}
 
 	/**
 	 * Constructor for a Body
@@ -59,16 +73,28 @@ public class Body {
 			allBodies.get(i).force.setLocation(allBodies.get(i).force.getX() + magnitude * direction.getX() / distance,
 					allBodies.get(i).force.getY() + magnitude * direction.getY() / distance);
 			// set the force of the next iteration
-			allBodies.get(i+1).force.setLocation(allBodies.get(i+1).force.getX() + magnitude * direction.getX() / distance,
-					allBodies.get(i+1).force.getY() + magnitude * direction.getY() / distance);
+			allBodies.get(i + 1).force.setLocation(
+					allBodies.get(i + 1).force.getX() + magnitude * direction.getX() / distance,
+					allBodies.get(i + 1).force.getY() + magnitude * direction.getY() / distance);
 		}
 	}
 
 	/**
 	 * 
 	 */
-	public static void moveBody() {
-		
+	public static void moveBodies() {
+		Point deltav = new Point();
+		Point deltap = new Point();
+		for (int i = 0; i < allBodies.size(); i++) {
+			// TODO: add deltaTime
+			deltav.setLocation(allBodies.get(i).force.getY() / allBodies.get(i).mass * deltaTime,
+					allBodies.get(i).force.getY() / allBodies.get(i).mass * deltaTime);
+			deltap.setLocation((allBodies.get(i).velocity.getX() + deltav.getX() / 2) * deltaTime,
+					(allBodies.get(i).velocity.getY() + deltav.getY() / 2) * deltaTime);
+			allBodies.get(i).velocity.setLocation(allBodies.get(i).velocity.getX() + deltav.getX(),allBodies.get(i).velocity.getY() + deltav.getY());
+			allBodies.get(i).position.setLocation(allBodies.get(i).position.getX() + deltap.getX(),allBodies.get(i).position.getY() + deltap.getY());
+			allBodies.get(i).force.setLocation(0, 0);
+		}
 	}
 
 }
