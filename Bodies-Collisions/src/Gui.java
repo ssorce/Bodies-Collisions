@@ -34,6 +34,7 @@ public class Gui {
 	private static JFrame frame;
 	private static JPanel drawingPanel;
 	private static Simulation sim;
+	private static double newdelta;
 
 	/**
 	 * Launch the application.
@@ -74,9 +75,11 @@ public class Gui {
 			double size = Double.parseDouble(sizeOfBodies.getText());
 			double mass = Double.parseDouble(massOfBodies.getText());
 			for (int i = 0; i < numBodies; i++) {
+				//TODO: generate Bodies that are not inside one another
 				new Body(new Point((2 + i), (2 + i)), new Point(i-1, i + 2), new Point(1 + i, 1 + i), mass, size);
 			}
 			sim = window.new Simulation();
+			sim.deltaTime = newdelta;
 			sim.start();
 		}
 	}
@@ -105,6 +108,19 @@ public class Gui {
 		mnSettings.add(mntmResetSimulation);
 
 		JMenuItem mntmPause = new JMenuItem("Pause");
+		mntmPause.addActionListener(e->{
+			if(mntmPause.getText().equals("Pause")){
+				if(sim!=null){
+					mntmPause.setText("Resume");
+					sim.paused = true;
+				}
+			} else {
+				if(sim!=null){
+					mntmPause.setText("Pause");
+					sim.paused = false;
+				}
+			}
+		});
 		mnSettings.add(mntmPause);
 
 		JMenuItem mntmSave = new JMenuItem("Save");
@@ -123,29 +139,34 @@ public class Gui {
 		frame.getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(new BorderLayout(0, 0));
 
-		JPanel deltavPanel = new JPanel();
-		contentPanel.add(deltavPanel, BorderLayout.SOUTH);
+		JPanel deltatPanel = new JPanel();
+		contentPanel.add(deltatPanel, BorderLayout.SOUTH);
 
-		JLabel lblDeltaV = new JLabel("Delta V");
-		deltavPanel.add(lblDeltaV);
+		JLabel lblDeltaT = new JLabel("Delta T");
+		deltatPanel.add(lblDeltaT);
 
 		JLabel deltavValue = new JLabel("125.00");
 
-		JSlider deltavSlider = new JSlider();
-		deltavSlider.setMajorTickSpacing(10);
+		JSlider deltatSlider = new JSlider();
+		deltatSlider.setMajorTickSpacing(10);
 		Hashtable<Integer, JLabel> labelTable = new Hashtable<Integer, JLabel>();
 		for (int i = 0; i <= 10; i++)
 			labelTable.put(i * 10, new JLabel(String.format("%1$,.0f", Math.pow(i, 3))));
-		deltavSlider.setLabelTable(labelTable);
-		deltavSlider.addChangeListener(e -> {
-			deltavValue.setText(String.format("%1$,.2f", Math.pow(deltavSlider.getValue() / 10.0, 3)));
+		deltatSlider.setLabelTable(labelTable);
+		deltatSlider.addChangeListener(e -> {
+			//TODO: This is the ActionListener for the ChangeDeltaT Slider
+			newdelta = Math.pow(deltatSlider.getValue() / 10.0, 3);
+			if(sim!=null){
+				sim.deltaTime = newdelta;
+			}
+			deltavValue.setText(String.format("%1$,.2f", newdelta));
 		});
-		deltavSlider.setPaintTicks(true);
-		deltavSlider.setPaintLabels(true);
-		deltavSlider.setPreferredSize(new Dimension(550, 50));
-		deltavPanel.add(deltavSlider);
+		deltatSlider.setPaintTicks(true);
+		deltatSlider.setPaintLabels(true);
+		deltatSlider.setPreferredSize(new Dimension(550, 50));
+		deltatPanel.add(deltatSlider);
 
-		deltavPanel.add(deltavValue);
+		deltatPanel.add(deltavValue);
 
 		drawingPanel = new DrawingPanel();
 		contentPanel.add(drawingPanel, BorderLayout.CENTER);
@@ -161,6 +182,9 @@ public class Gui {
 
 		JSlider zoomSlider = new JSlider(JSlider.VERTICAL, 0, 100, 50);
 		zoomSlider.setPreferredSize(new Dimension(20, 375));
+		zoomSlider.addChangeListener(e->{
+			//TODO: Implement zoom
+		});
 		verticalBox.add(zoomSlider);
 	}
 
@@ -172,6 +196,7 @@ public class Gui {
 		 */
 		@Override
 		public void paint(Graphics g) {
+			//TODO: This is where the drawingPanel is painted
 			super.paint(g);
 			Graphics2D g2 = (Graphics2D)g;
 			for(int i = 0; i < Body.getAllbodies().size(); i++){
@@ -184,6 +209,7 @@ public class Gui {
 	private class Simulation extends Thread {
 		private boolean running = true;
 		private boolean paused = false;
+		private double deltaTime;
 
 		/*
 		 * (non-Javadoc)
@@ -193,8 +219,10 @@ public class Gui {
 		@Override
 		public void run() {
 			super.run();
+			//TODO: This is where the simulation loop is
 			while (running) {
 				if (!paused) {
+					Body.setDeltaTime(deltaTime);
 					Body.calculateForces();
 					Body.moveBodies();
 					Body.collisions();
