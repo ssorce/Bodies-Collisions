@@ -149,8 +149,8 @@ public class Body {
 		}
 		for (i = 0; i < allBodies.size() - 1; i++) {
 			for (int j = i + 1; j < allBodies.size(); j++)
-
 			{
+				// Going to have to find the at which collision happened to be more precise
 				if (Math.abs(allBodies.get(i).position.distance(allBodies.get(j).position)) <= Math
 						.max(allBodies.get(i).radius, allBodies.get(j).radius) && !switched[i] && !switched[j]) {
 					System.out.println("A collision happened on i: " + i + " and j: " + j + "\nLocations:");
