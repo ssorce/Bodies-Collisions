@@ -1,4 +1,5 @@
 import java.awt.EventQueue;
+import java.awt.Graphics;
 import java.util.Hashtable;
 
 import javax.swing.JComponent;
@@ -98,6 +99,9 @@ public class Gui {
 		JMenuItem mntmResetSimulation = new JMenuItem("Reset Simulation");
 		mnSettings.add(mntmResetSimulation);
 		
+		JMenuItem mntmPause = new JMenuItem("Pause");
+		mnSettings.add(mntmPause);
+		
 		JMenuItem mntmSave = new JMenuItem("Save");
 		mnSettings.add(mntmSave);
 		
@@ -138,7 +142,7 @@ public class Gui {
 		
 		deltavPanel.add(deltavValue);
 		
-		JPanel drawingPanel = new JPanel();
+		JPanel drawingPanel = new DrawingPanel();
 		contentPanel.add(drawingPanel, BorderLayout.CENTER);
 		
 		JPanel panel = new JPanel();
@@ -156,6 +160,15 @@ public class Gui {
 	}
 	
 	private class DrawingPanel extends JPanel{
+
+		/* (non-Javadoc)
+		 * @see javax.swing.JComponent#paint(java.awt.Graphics)
+		 */
+		@Override
+		public void paint(Graphics g) {
+			super.paint(g);
+			//draw all body objects
+		}
 		
 	}
 
