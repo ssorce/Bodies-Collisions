@@ -3,6 +3,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.Hashtable;
+import java.util.Random;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -34,14 +35,15 @@ public class Gui {
 	private static JFrame frame;
 	private static JPanel drawingPanel;
 	private static Simulation sim;
-	private static double newdelta;
 
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args)
+	{
 		EventQueue.invokeLater(new Runnable() {
-			public void run() {
+			public void run()
+			{
 				try {
 					window = new Gui();
 					window.frame.setVisible(true);
@@ -60,8 +62,9 @@ public class Gui {
 		initialize();
 	}
 
-	private static void newSimulation() {
-		if(sim!=null)
+	private static void newSimulation()
+	{
+		if (sim != null)
 			sim.running = false;
 		JTextField numberOfBodies = new JTextField();
 		JTextField sizeOfBodies = new JTextField();
@@ -74,12 +77,26 @@ public class Gui {
 			double numBodies = Double.parseDouble(numberOfBodies.getText());
 			double size = Double.parseDouble(sizeOfBodies.getText());
 			double mass = Double.parseDouble(massOfBodies.getText());
+			// Testing collisions and Visual
+			/*
+			 * for (int i = 0; i < numBodies; i++) { if (i % 2 == 0) new
+			 * Body(new Point((100 * i), (100 * i)), new Point(i * 20, i * 20),
+			 * new Point(30 * i, 30 * i), mass, size); else new Body(new
+			 * Point((70 * i), (20 * i)), new Point(i * 20, i * -20), new
+			 * Point(30 * i, -30 * i), mass, size); }
+			 */
+			Random rand = new Random();
 			for (int i = 0; i < numBodies; i++) {
-				//TODO: generate Bodies that are not inside one another
-				new Body(new Point((2 + i), (2 + i)), new Point(i-1, i + 2), new Point(1 + i, 1 + i), mass, size);
+				new Body(new Point(rand.nextInt((300) + 1), rand.nextInt((300) + 1)),
+						new Point(rand.nextInt((20) + 1), rand.nextInt((20) + 1)),
+						new Point(rand.nextInt((10) + 1), rand.nextInt((10) + 1)), mass, size);
 			}
+
+			// new Body(new Point(10, 20), new Point(0, 2), new Point(3, 3),
+			// (60), 30);
+			// new Body(new Point(10, 50), new Point(0, -2), new Point(1, 1),
+			// (20), 10);
 			sim = window.new Simulation();
-			sim.deltaTime = newdelta;
 			sim.start();
 		}
 	}
@@ -87,7 +104,8 @@ public class Gui {
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize() {
+	private void initialize()
+	{
 		frame = new JFrame();
 		frame.setBounds(100, 100, 734, 514);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -108,19 +126,6 @@ public class Gui {
 		mnSettings.add(mntmResetSimulation);
 
 		JMenuItem mntmPause = new JMenuItem("Pause");
-		mntmPause.addActionListener(e->{
-			if(mntmPause.getText().equals("Pause")){
-				if(sim!=null){
-					mntmPause.setText("Resume");
-					sim.paused = true;
-				}
-			} else {
-				if(sim!=null){
-					mntmPause.setText("Pause");
-					sim.paused = false;
-				}
-			}
-		});
 		mnSettings.add(mntmPause);
 
 		JMenuItem mntmSave = new JMenuItem("Save");
@@ -139,34 +144,30 @@ public class Gui {
 		frame.getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(new BorderLayout(0, 0));
 
-		JPanel deltatPanel = new JPanel();
-		contentPanel.add(deltatPanel, BorderLayout.SOUTH);
+		JPanel deltavPanel = new JPanel();
+		contentPanel.add(deltavPanel, BorderLayout.SOUTH);
 
-		JLabel lblDeltaT = new JLabel("Delta T");
-		deltatPanel.add(lblDeltaT);
+		JLabel lblDeltaV = new JLabel("Delta V");
+		deltavPanel.add(lblDeltaV);
 
-		JLabel deltavValue = new JLabel("125.00");
+		JLabel deltavValue = new JLabel(".50");
 
-		JSlider deltatSlider = new JSlider();
-		deltatSlider.setMajorTickSpacing(10);
+		JSlider deltavSlider = new JSlider();
+		deltavSlider.setMajorTickSpacing(10);
+
 		Hashtable<Integer, JLabel> labelTable = new Hashtable<Integer, JLabel>();
 		for (int i = 0; i <= 10; i++)
 			labelTable.put(i * 10, new JLabel(String.format("%1$,.0f", Math.pow(i, 3))));
-		deltatSlider.setLabelTable(labelTable);
-		deltatSlider.addChangeListener(e -> {
-			//TODO: This is the ActionListener for the ChangeDeltaT Slider
-			newdelta = Math.pow(deltatSlider.getValue() / 10.0, 3);
-			if(sim!=null){
-				sim.deltaTime = newdelta;
-			}
-			deltavValue.setText(String.format("%1$,.2f", newdelta));
+		deltavSlider.setLabelTable(labelTable);
+		deltavSlider.addChangeListener(e -> {
+			deltavValue.setText(String.format("%1$,.2f", Math.pow(deltavSlider.getValue() / 10.0, 3)));
 		});
-		deltatSlider.setPaintTicks(true);
-		deltatSlider.setPaintLabels(true);
-		deltatSlider.setPreferredSize(new Dimension(550, 50));
-		deltatPanel.add(deltatSlider);
-
-		deltatPanel.add(deltavValue);
+		deltavSlider.setPaintTicks(true);
+		deltavSlider.setPaintLabels(true);
+		deltavSlider.setPreferredSize(new Dimension(550, 50));
+		deltavPanel.add(deltavSlider);
+		Body.setDeltaTime(Double.parseDouble(deltavValue.getText()));
+		deltavPanel.add(deltavValue);
 
 		drawingPanel = new DrawingPanel();
 		contentPanel.add(drawingPanel, BorderLayout.CENTER);
@@ -182,9 +183,6 @@ public class Gui {
 
 		JSlider zoomSlider = new JSlider(JSlider.VERTICAL, 0, 100, 50);
 		zoomSlider.setPreferredSize(new Dimension(20, 375));
-		zoomSlider.addChangeListener(e->{
-			//TODO: Implement zoom
-		});
 		verticalBox.add(zoomSlider);
 	}
 
@@ -194,14 +192,13 @@ public class Gui {
 		 * 
 		 * @see javax.swing.JComponent#paint(java.awt.Graphics)
 		 */
-		@Override
-		public void paint(Graphics g) {
-			//TODO: This is where the drawingPanel is painted
+		public void paint(Graphics g)
+		{
 			super.paint(g);
-			Graphics2D g2 = (Graphics2D)g;
-			for(int i = 0; i < Body.getAllbodies().size(); i++){
+			for (int i = 0; i < Body.getAllbodies().size(); i++) {
 				Body body = Body.getAllbodies().get(i);
-				g2.fillOval((int)body.getPosition().getX(), (int)body.getPosition().getY(), (int)body.getRadius(), (int)body.getRadius());
+				g.fillOval((int) body.getPosition().getX(), (int) body.getPosition().getY(), (int) body.getRadius(),
+						(int) body.getRadius());
 			}
 		}
 	}
@@ -209,7 +206,6 @@ public class Gui {
 	private class Simulation extends Thread {
 		private boolean running = true;
 		private boolean paused = false;
-		private double deltaTime;
 
 		/*
 		 * (non-Javadoc)
@@ -217,16 +213,23 @@ public class Gui {
 		 * @see java.lang.Thread#run()
 		 */
 		@Override
-		public void run() {
+		public void run()
+		{
 			super.run();
-			//TODO: This is where the simulation loop is
 			while (running) {
 				if (!paused) {
-					Body.setDeltaTime(deltaTime);
 					Body.calculateForces();
 					Body.moveBodies();
 					Body.collisions();
-					frame.repaint();
+					drawingPanel.repaint();
+					try {
+						this.sleep(100); // This allows the User to visually see
+											// what is happening, (decreasing
+											// the faster things move)
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 			}
 		}

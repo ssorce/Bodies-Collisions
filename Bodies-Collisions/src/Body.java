@@ -41,21 +41,20 @@ public class Body {
 		deltaTime = Double.parseDouble(args[0]);
 		int EndTime = Integer.parseInt(args[1]);
 		int numBodies = Integer.parseInt(args[2]);
-		for (x = 0; x < numBodies; x++) {
-			new Body(new Point((2 + x), (2 + x)), new Point(x-1, x + 2), new Point(1 + x, 1 + x), (20 - (x * 3)), 5);
-		}
+		// for (x = 0; x < numBodies; x++) {
+		// new Body(new Point((2 + x), (2 + x)), new Point(x - 1, x + 2), new
+		// Point(1 + x, 1 + x), (20 - (x * 3)), 5);
+		// }
 
 		// Testing Collisions
-		// new Body(new Point(10, 2), new Point(0, 2), new Point(3, 3), (60),
-		// 3);
-		// new Body(new Point(10, 10), new Point(0, -2), new Point(1, 1), (20),
-		// 1);
+		new Body(new Point(10, 20), new Point(0, 2), new Point(3, 3), (60), 30);
+		new Body(new Point(10, 50), new Point(0, -2), new Point(1, 1), (20), 10);
 
 		for (i = 0; i < EndTime; i = deltaTime + i) {
 			calculateForces();
 			moveBodies();
 			collisions();
-			for (j = 0; j < numBodies; j++) {
+			for (j = 0; j < 2; j++) {
 				System.out.println("I: " + i + " J: " + j + " Location: (" + allBodies.get(j).position.getX() + ", "
 						+ allBodies.get(j).position.getY() + ")");
 			}
@@ -148,9 +147,9 @@ public class Body {
 			switched[i] = false;
 		}
 		for (i = 0; i < allBodies.size() - 1; i++) {
-			for (int j = i + 1; j < allBodies.size(); j++)
-			{
-				// Going to have to find the at which collision happened to be more precise
+			for (int j = i + 1; j < allBodies.size(); j++) {
+				// Going to have to find the at which collision happened to be
+				// more precise
 				if (Math.abs(allBodies.get(i).position.distance(allBodies.get(j).position)) <= Math
 						.max(allBodies.get(i).radius, allBodies.get(j).radius) && !switched[i] && !switched[j]) {
 					System.out.println("A collision happened on i: " + i + " and j: " + j + "\nLocations:");
@@ -173,84 +172,100 @@ public class Body {
 	/**
 	 * @return the position
 	 */
-	public Point getPosition() {
+	public Point getPosition()
+	{
 		return position;
 	}
 
 	/**
-	 * @param position the position to set
+	 * @param position
+	 *            the position to set
 	 */
-	public void setPosition(Point position) {
+	public void setPosition(Point position)
+	{
 		this.position = position;
 	}
 
 	/**
 	 * @return the velocity
 	 */
-	public Point getVelocity() {
+	public Point getVelocity()
+	{
 		return velocity;
 	}
 
 	/**
-	 * @param velocity the velocity to set
+	 * @param velocity
+	 *            the velocity to set
 	 */
-	public void setVelocity(Point velocity) {
+	public void setVelocity(Point velocity)
+	{
 		this.velocity = velocity;
 	}
 
 	/**
 	 * @return the force
 	 */
-	public Point getForce() {
+	public Point getForce()
+	{
 		return force;
 	}
 
 	/**
-	 * @param force the force to set
+	 * @param force
+	 *            the force to set
 	 */
-	public void setForce(Point force) {
+	public void setForce(Point force)
+	{
 		this.force = force;
 	}
 
 	/**
 	 * @return the deltaTime
 	 */
-	public static double getDeltaTime() {
+	public static double getDeltaTime()
+	{
 		return deltaTime;
 	}
 
 	/**
-	 * @param deltaTime the deltaTime to set
+	 * @param deltaTime
+	 *            the deltaTime to set
 	 */
-	public static void setDeltaTime(double deltaTime) {
+	public static void setDeltaTime(double deltaTime)
+	{
 		Body.deltaTime = deltaTime;
 	}
 
 	/**
 	 * @return the mass
 	 */
-	public double getMass() {
+	public double getMass()
+	{
 		return mass;
 	}
 
 	/**
 	 * @return the radius
 	 */
-	public double getRadius() {
+	public double getRadius()
+	{
 		return radius;
 	}
 
 	/**
 	 * @return the allbodies
 	 */
-	public static ArrayList<Body> getAllbodies() {
+	public static ArrayList<Body> getAllbodies()
+	{
 		return allBodies;
 	}
 
 	/**
 	 * @return the gravity
 	 */
-	public static double getGravity() {
+	public static double getGravity()
+	{
 		return gravity;
 	}
 
