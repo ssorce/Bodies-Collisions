@@ -2,7 +2,6 @@ import java.awt.EventQueue;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.util.Hashtable;
-import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 import javax.swing.JComponent;
@@ -46,7 +45,7 @@ public class Gui {
 			public void run() {
 				try {
 					window = new Gui();
-					window.frame.setVisible(true);
+					Gui.frame.setVisible(true);
 					newSimulation();
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -82,7 +81,7 @@ public class Gui {
 		final JComponent[] inputs = new JComponent[] { new JLabel("Number of Threads"), numberOfThreads,
 				new JLabel("Number of Bodies"), numberOfBodies, new JLabel("Size of Bodies"), sizeOfBodies,
 				new JLabel("Mass of Bodies"), massOfBodies, svp };
-		int result = JOptionPane.showConfirmDialog(window.frame, inputs, "New Simulation Setup",
+		int result = JOptionPane.showConfirmDialog(Gui.frame, inputs, "New Simulation Setup",
 				JOptionPane.PLAIN_MESSAGE);
 		if (result == JOptionPane.OK_OPTION) {
 			double numBodies = Double.parseDouble(numberOfBodies.getText());
@@ -225,6 +224,7 @@ public class Gui {
 	}
 
 	private class DrawingPanel extends JPanel {
+		private static final long serialVersionUID = 4036353244873565355L;
 		private double zoom = 5;
 		/*
 		 * (non-Javadoc)
@@ -262,7 +262,7 @@ public class Gui {
 					Body.collisions();
 					drawingPanel.repaint();
 					try {
-						this.sleep(100);
+						Thread.sleep(100);
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
