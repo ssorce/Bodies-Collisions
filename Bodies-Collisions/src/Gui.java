@@ -23,19 +23,19 @@ import javax.swing.Box;
 import javax.swing.ButtonGroup;
 
 /**
- * 
- */
-
-/**
  * @author Jonathon Davis
  *
  */
 public class Gui {
 
-	private static Gui window;
 	private static JFrame frame;
 	private static DrawingPanel drawingPanel;
 	private static Simulation sim;
+	private static double numBodies = 0;
+	private static double sizeMin = 0;
+	private static double sizeMax = 0;
+	private static double massMin = 0;
+	private static double massMax = 0;
 
 	/**
 	 * Launch the application.
@@ -44,7 +44,7 @@ public class Gui {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					window = new Gui();
+					new Gui();
 					Gui.frame.setVisible(true);
 					newSimulation();
 				} catch (Exception e) {
@@ -63,7 +63,8 @@ public class Gui {
 
 	private static void newSimulation() {
 		if (sim != null)
-			sim.running = false;
+			sim.setRunning(false);
+		Body.clear();
 		JTextField numberOfThreads = new JTextField();
 		JTextField numberOfBodies = new JTextField();
 		JTextField sizeOfBodies = new JTextField();
@@ -84,9 +85,9 @@ public class Gui {
 		int result = JOptionPane.showConfirmDialog(Gui.frame, inputs, "New Simulation Setup",
 				JOptionPane.PLAIN_MESSAGE);
 		if (result == JOptionPane.OK_OPTION) {
-			double numBodies = Double.parseDouble(numberOfBodies.getText());
-			double sizeMin = 0;
-			double sizeMax = 0;
+			numBodies = Double.parseDouble(numberOfBodies.getText());
+			sizeMin = 0;
+			sizeMax = 0;
 			if (sizeOfBodies.getText().contains("-")) {
 				String[] range = sizeOfBodies.getText().split("-");
 				sizeMin = Double.parseDouble(range[0]);
@@ -95,8 +96,8 @@ public class Gui {
 				sizeMin = Double.parseDouble(sizeOfBodies.getText());
 				sizeMax = Double.parseDouble(sizeOfBodies.getText());
 			}
-			double massMin = 0;
-			double massMax = 0;
+			massMin = 0;
+			massMax = 0;
 			if (massOfBodies.getText().contains("-")) {
 				String[] range = massOfBodies.getText().split("-");
 				massMin = Double.parseDouble(range[0]);
@@ -126,10 +127,32 @@ public class Gui {
 			// (20), 10);
 			// new Body(new Point(90, 500), new Point(-1, -5), new Point(110,
 			// 110), (100), 50);
-			sim = window.new Simulation();
+			sim = new Simulation();
 			Gui.frame.repaint();
 			sim.start();
 		}
+	}
+	
+	private void reset(){
+		if (sim != null)
+			sim.setRunning(false);
+		Body.clear();
+		for (int i = 0; i < numBodies; i++) {
+			double size = ThreadLocalRandom.current().nextDouble(sizeMin, sizeMax + 1);
+			new Body(
+					new Point(
+							(int) (size + ((i > 0) ? Body.getAllbodies().get(i - 1).getRadius()
+									+ Body.getAllbodies().get(i - 1).getPosition().getX() : 0)),
+							ThreadLocalRandom.current().nextInt(-50, 50)),
+					new Point(ThreadLocalRandom.current().nextInt(-50, 50),
+							ThreadLocalRandom.current().nextInt(-50, 50)),
+					new Point(ThreadLocalRandom.current().nextInt(-50, 50),
+							ThreadLocalRandom.current().nextInt(-50, 50)),
+					ThreadLocalRandom.current().nextDouble(massMin, massMax + 1), size);
+		}
+		sim = new Simulation();
+		Gui.frame.repaint();
+		sim.start();
 	}
 
 	/**
@@ -153,22 +176,10 @@ public class Gui {
 		mnSettings.add(mntmNewSimulation);
 
 		JMenuItem mntmResetSimulation = new JMenuItem("Reset Simulation");
+		mntmResetSimulation.addActionListener(e->{
+			reset();
+		});
 		mnSettings.add(mntmResetSimulation);
-
-		JMenuItem mntmPause = new JMenuItem("Pause");
-		mnSettings.add(mntmPause);
-
-		JMenuItem mntmSave = new JMenuItem("Save");
-		mnSettings.add(mntmSave);
-
-		JMenuItem mntmLoad = new JMenuItem("Load");
-		mnSettings.add(mntmLoad);
-
-		JMenu mnEdit = new JMenu("Edit");
-		menuBar.add(mnEdit);
-
-		JMenuItem mntmAddObject = new JMenuItem("Add Object");
-		mnEdit.add(mntmAddObject);
 
 		JPanel contentPanel = new JPanel();
 		frame.getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -180,7 +191,7 @@ public class Gui {
 		JLabel lblDeltaV = new JLabel("Delta V");
 		deltavPanel.add(lblDeltaV);
 
-		JLabel deltavValue = new JLabel(".50");
+		JLabel deltavValue = new JLabel("1");
 
 		JSlider deltavSlider = new JSlider();
 		deltavSlider.setMajorTickSpacing(10);
@@ -194,7 +205,7 @@ public class Gui {
 			double newdeltaT = Math.pow(deltavSlider.getValue() / 10.0, 3);
 			deltavValue.setText(String.format("%1$,.2f", newdeltaT));
 			if(sim!=null)
-				sim.deltat = newdeltaT;
+				sim.setDeltat(newdeltaT);
 		});
 		deltavSlider.setPaintTicks(true);
 		deltavSlider.setPaintLabels(true);
@@ -241,36 +252,9 @@ public class Gui {
 		}
 	}
 
-	private class Simulation extends Thread {
-		private boolean running = true;
-		private boolean paused = false;
-		private double deltat = 1;
-
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see java.lang.Thread#run()
-		 */
-		@Override
-		public void run() {
-			super.run();
-			while (running) {
-				if (!paused) {
-					Body.setDeltaTime(deltat);
-					Body.calculateForces();
-					Body.moveBodies();
-					Body.collisions();
-					drawingPanel.repaint();
-					try {
-						Thread.sleep(100);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-			}
-		}
-
+	public static void repaint() {
+		frame.repaint();
 	}
+
 
 }

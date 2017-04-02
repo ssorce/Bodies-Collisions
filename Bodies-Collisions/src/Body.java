@@ -168,6 +168,12 @@ public class Body {
 			}
 		}
 	}
+	
+	public static void clear(){
+		for(int i = allBodies.size()-1; i >= 0; i--){
+			allBodies.remove(i);
+		}
+	}
 
 	/**
 	 * @return the position
