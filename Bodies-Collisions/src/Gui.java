@@ -35,7 +35,7 @@ public class Gui {
 
 	private static Gui window;
 	private static JFrame frame;
-	private static JPanel drawingPanel;
+	private static DrawingPanel drawingPanel;
 	private static Simulation sim;
 
 	/**
@@ -190,8 +190,12 @@ public class Gui {
 		for (int i = 0; i <= 10; i++)
 			labelTable.put(i * 10, new JLabel(String.format("%1$,.0f", Math.pow(i, 3))));
 		deltavSlider.setLabelTable(labelTable);
+		deltavSlider.setValue(10);
 		deltavSlider.addChangeListener(e -> {
-			deltavValue.setText(String.format("%1$,.2f", Math.pow(deltavSlider.getValue() / 10.0, 3)));
+			double newdeltaT = Math.pow(deltavSlider.getValue() / 10.0, 3);
+			deltavValue.setText(String.format("%1$,.2f", newdeltaT));
+			if(sim!=null)
+				sim.deltat = newdeltaT;
 		});
 		deltavSlider.setPaintTicks(true);
 		deltavSlider.setPaintLabels(true);
@@ -212,12 +216,16 @@ public class Gui {
 		JLabel lblZoom = new JLabel("Zoom");
 		verticalBox.add(lblZoom);
 
-		JSlider zoomSlider = new JSlider(JSlider.VERTICAL, 0, 100, 50);
+		JSlider zoomSlider = new JSlider(JSlider.VERTICAL, 1, 11, 5);
+		zoomSlider.addChangeListener(e->{
+			drawingPanel.zoom = zoomSlider.getValue();
+		});
 		zoomSlider.setPreferredSize(new Dimension(20, 375));
 		verticalBox.add(zoomSlider);
 	}
 
 	private class DrawingPanel extends JPanel {
+		private double zoom = 5;
 		/*
 		 * (non-Javadoc)
 		 * 
@@ -227,8 +235,8 @@ public class Gui {
 			super.paint(g);
 			for (int i = 0; i < Body.getAllbodies().size(); i++) {
 				Body body = Body.getAllbodies().get(i);
-				g.fillOval((int) body.getPosition().getX(), (int) body.getPosition().getY(), (int) body.getRadius(),
-						(int) body.getRadius());
+				g.fillOval((int) (body.getPosition().getX()*1/zoom), (int) (body.getPosition().getY()*1/zoom), (int) (body.getRadius()*1/zoom),
+						(int) (body.getRadius()*1/zoom));
 			}
 		}
 	}
@@ -236,7 +244,7 @@ public class Gui {
 	private class Simulation extends Thread {
 		private boolean running = true;
 		private boolean paused = false;
-		private double deltat = 125;
+		private double deltat = 1;
 
 		/*
 		 * (non-Javadoc)
@@ -248,7 +256,7 @@ public class Gui {
 			super.run();
 			while (running) {
 				if (!paused) {
-					// Body.setDeltaTime(deltat);
+					Body.setDeltaTime(deltat);
 					Body.calculateForces();
 					Body.moveBodies();
 					Body.collisions();
