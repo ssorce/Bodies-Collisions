@@ -23,7 +23,7 @@ public class Body {
 	private final double mass;
 	private final double radius;
 	private static final ArrayList<Body> allBodies = new ArrayList<>();
-	private static final double gravity = 6.67e-11;// Jupiter Gravity 24.79 m/s^2
+	private static final double gravity = 24.79;// Jupiter Gravity 24.79 m/s^2
 												// //6.67e-11;
 	private static double deltaTime; // deltaTime is the number of iterations
 										// (time steps for the sim)

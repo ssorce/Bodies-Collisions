@@ -105,26 +105,20 @@ public class Gui {
 			} else {
 				massMin = Double.parseDouble(massOfBodies.getText());
 				massMax = Double.parseDouble(massOfBodies.getText());
-			} 
+			}
 			// Testing collisions and Visual
 			for (int i = 0; i < numBodies; i++) {
-				if (i % 2 == 0)
-					new Body(new Point((100 * i), (100 * i)), new Point(i * 20, i * 20), new Point(30 * i, 30 * i),
-							ThreadLocalRandom.current().nextDouble(massMin, massMax + 1),
-							ThreadLocalRandom.current().nextDouble(sizeMin, sizeMax + 1));
-				else
-					new Body(new Point((70 * i), (20 * i)), new Point(i * 20, i * -20), new Point(30 * i, -30 * i),
-							ThreadLocalRandom.current().nextDouble(massMin, massMax + 1),
-							ThreadLocalRandom.current().nextDouble(sizeMin, sizeMax + 1));
-			}
-
-			Random rand = new Random();
-			for (int i = 0; i < numBodies; i++) {
-				new Body(new Point(rand.nextInt((300) + 1), rand.nextInt((300) + 1)),
-						new Point(rand.nextInt((20) + 1), rand.nextInt((20) + 1)),
-						new Point(rand.nextInt((10) + 1), rand.nextInt((10) + 1)),
-						ThreadLocalRandom.current().nextDouble(massMin, massMax + 1),
-						ThreadLocalRandom.current().nextDouble(sizeMin, sizeMax + 1));
+				double size = ThreadLocalRandom.current().nextDouble(sizeMin, sizeMax + 1);
+				new Body(
+						new Point(
+								(int) (size + ((i > 0) ? Body.getAllbodies().get(i - 1).getRadius()
+										+ Body.getAllbodies().get(i - 1).getPosition().getX() : 0)),
+								ThreadLocalRandom.current().nextInt(-50, 50)),
+						new Point(ThreadLocalRandom.current().nextInt(-50, 50),
+								ThreadLocalRandom.current().nextInt(-50, 50)),
+						new Point(ThreadLocalRandom.current().nextInt(-50, 50),
+								ThreadLocalRandom.current().nextInt(-50, 50)),
+						ThreadLocalRandom.current().nextDouble(massMin, massMax + 1), size);
 			}
 
 			// new Body(new Point(50, 5), new Point(0, 2), new Point(300, 300),
@@ -134,6 +128,7 @@ public class Gui {
 			// new Body(new Point(90, 500), new Point(-1, -5), new Point(110,
 			// 110), (100), 50);
 			sim = window.new Simulation();
+			Gui.frame.repaint();
 			sim.start();
 		}
 	}
