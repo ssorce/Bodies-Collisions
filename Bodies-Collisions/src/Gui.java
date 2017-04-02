@@ -92,8 +92,8 @@ public class Gui {
 			 * size); }
 			 */
 			new Body(new Point(50, 5), new Point(0, 2), new Point(300, 300), (400), 30);
-			new Body(new Point(30, 300), new Point(0, -2), new Point(0, 0), (20), 10);
-			new Body(new Point(60, 500), new Point(-1, -2), new Point(110, 110), (100), 50);
+			new Body(new Point(30, 300), new Point(0, -2), new Point(1, 2), (20), 10);
+			new Body(new Point(90, 500), new Point(-1, -5), new Point(110, 110), (100), 50);
 			sim = window.new Simulation();
 			sim.start();
 		}
