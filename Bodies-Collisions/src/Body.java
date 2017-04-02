@@ -23,7 +23,8 @@ public class Body {
 	private final double mass;
 	private final double radius;
 	private static final ArrayList<Body> allBodies = new ArrayList<>();
-	private static final double gravity = 6.67e-11;
+	private static final double gravity = 24.79;// Jupiter Gravity 24.79 m/s^2
+												// //6.67e-11;
 	private static double deltaTime; // deltaTime is the number of iterations
 										// (time steps for the sim)
 
@@ -105,12 +106,12 @@ public class Body {
 						allBodies.get(j).position.getY() - allBodies.get(i).position.getY());
 				// set the force of the current iteration
 				allBodies.get(i).force.setLocation(
-						(allBodies.get(i).force.getX() + magnitude * direction.getX()) / distance,
-						(allBodies.get(i).force.getY() + magnitude * direction.getY()) / distance);
+						allBodies.get(i).force.getX() + (magnitude * direction.getX() / distance),
+						allBodies.get(i).force.getY() + (magnitude * direction.getY() / distance));
 				// set the force of the next iteration
 				allBodies.get(j).force.setLocation(
-						(allBodies.get(j).force.getX() - magnitude * direction.getX()) / distance,
-						(allBodies.get(j).force.getY() - magnitude * direction.getY()) / distance);
+						allBodies.get(j).force.getX() - (magnitude * direction.getX() / distance),
+						allBodies.get(j).force.getY() - (magnitude * direction.getY() / distance));
 			}
 		}
 	}

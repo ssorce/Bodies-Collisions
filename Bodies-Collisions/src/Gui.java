@@ -1,6 +1,5 @@
 import java.awt.EventQueue;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.Hashtable;
 import java.util.Random;
@@ -85,17 +84,16 @@ public class Gui {
 			 * Point((70 * i), (20 * i)), new Point(i * 20, i * -20), new
 			 * Point(30 * i, -30 * i), mass, size); }
 			 */
-			Random rand = new Random();
-			for (int i = 0; i < numBodies; i++) {
-				new Body(new Point(rand.nextInt((300) + 1), rand.nextInt((300) + 1)),
-						new Point(rand.nextInt((20) + 1), rand.nextInt((20) + 1)),
-						new Point(rand.nextInt((10) + 1), rand.nextInt((10) + 1)), mass, size);
-			}
-
-			// new Body(new Point(10, 20), new Point(0, 2), new Point(3, 3),
-			// (60), 30);
-			// new Body(new Point(10, 50), new Point(0, -2), new Point(1, 1),
-			// (20), 10);
+			/*
+			 * Random rand = new Random(); for (int i = 0; i < numBodies; i++) {
+			 * new Body(new Point(rand.nextInt((300) + 1), rand.nextInt((300) +
+			 * 1)), new Point(rand.nextInt((20) + 1), rand.nextInt((20) + 1)),
+			 * new Point(rand.nextInt((10) + 1), rand.nextInt((10) + 1)), mass,
+			 * size); }
+			 */
+			new Body(new Point(50, 5), new Point(0, 2), new Point(300, 300), (400), 30);
+			new Body(new Point(30, 300), new Point(0, -2), new Point(0, 0), (20), 10);
+			new Body(new Point(60, 500), new Point(-1, -2), new Point(110, 110), (100), 50);
 			sim = window.new Simulation();
 			sim.start();
 		}
