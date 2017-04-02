@@ -3,6 +3,7 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.util.Hashtable;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -12,6 +13,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JMenu;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
 import java.awt.BorderLayout;
@@ -19,6 +21,7 @@ import java.awt.Dimension;
 
 import javax.swing.JSlider;
 import javax.swing.Box;
+import javax.swing.ButtonGroup;
 
 /**
  * 
@@ -38,11 +41,9 @@ public class Gui {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args)
-	{
+	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
-			public void run()
-			{
+			public void run() {
 				try {
 					window = new Gui();
 					window.frame.setVisible(true);
@@ -61,39 +62,77 @@ public class Gui {
 		initialize();
 	}
 
-	private static void newSimulation()
-	{
+	private static void newSimulation() {
 		if (sim != null)
 			sim.running = false;
+		JTextField numberOfThreads = new JTextField();
 		JTextField numberOfBodies = new JTextField();
 		JTextField sizeOfBodies = new JTextField();
 		JTextField massOfBodies = new JTextField();
-		final JComponent[] inputs = new JComponent[] { new JLabel("Number of Bodies"), numberOfBodies,
-				new JLabel("Size of Bodies"), sizeOfBodies, new JLabel("Mass of Bodies"), massOfBodies };
+		ButtonGroup sp = new ButtonGroup();
+		JRadioButton sequential = new JRadioButton();
+		JRadioButton parallel = new JRadioButton();
+		sp.add(sequential);
+		sp.add(parallel);
+		JPanel svp = new JPanel();
+		svp.add(new JLabel("Sequential"));
+		svp.add(sequential);
+		svp.add(new JLabel("Parallel"));
+		svp.add(parallel);
+		final JComponent[] inputs = new JComponent[] { new JLabel("Number of Threads"), numberOfThreads,
+				new JLabel("Number of Bodies"), numberOfBodies, new JLabel("Size of Bodies"), sizeOfBodies,
+				new JLabel("Mass of Bodies"), massOfBodies, svp };
 		int result = JOptionPane.showConfirmDialog(window.frame, inputs, "New Simulation Setup",
 				JOptionPane.PLAIN_MESSAGE);
 		if (result == JOptionPane.OK_OPTION) {
 			double numBodies = Double.parseDouble(numberOfBodies.getText());
-			double size = Double.parseDouble(sizeOfBodies.getText());
-			double mass = Double.parseDouble(massOfBodies.getText());
+			double sizeMin = 0;
+			double sizeMax = 0;
+			if (sizeOfBodies.getText().contains("-")) {
+				String[] range = sizeOfBodies.getText().split("-");
+				sizeMin = Double.parseDouble(range[0]);
+				sizeMax = Double.parseDouble(range[1]);
+			} else {
+				sizeMin = Double.parseDouble(sizeOfBodies.getText());
+				sizeMax = Double.parseDouble(sizeOfBodies.getText());
+			}
+			double massMin = 0;
+			double massMax = 0;
+			if (massOfBodies.getText().contains("-")) {
+				String[] range = massOfBodies.getText().split("-");
+				massMin = Double.parseDouble(range[0]);
+				massMax = Double.parseDouble(range[1]);
+			} else {
+				massMin = Double.parseDouble(massOfBodies.getText());
+				massMax = Double.parseDouble(massOfBodies.getText());
+			} 
 			// Testing collisions and Visual
-			/*
-			 * for (int i = 0; i < numBodies; i++) { if (i % 2 == 0) new
-			 * Body(new Point((100 * i), (100 * i)), new Point(i * 20, i * 20),
-			 * new Point(30 * i, 30 * i), mass, size); else new Body(new
-			 * Point((70 * i), (20 * i)), new Point(i * 20, i * -20), new
-			 * Point(30 * i, -30 * i), mass, size); }
-			 */
-			/*
-			 * Random rand = new Random(); for (int i = 0; i < numBodies; i++) {
-			 * new Body(new Point(rand.nextInt((300) + 1), rand.nextInt((300) +
-			 * 1)), new Point(rand.nextInt((20) + 1), rand.nextInt((20) + 1)),
-			 * new Point(rand.nextInt((10) + 1), rand.nextInt((10) + 1)), mass,
-			 * size); }
-			 */
-			new Body(new Point(50, 5), new Point(0, 2), new Point(300, 300), (400), 30);
-			new Body(new Point(30, 300), new Point(0, -2), new Point(1, 2), (20), 10);
-			new Body(new Point(90, 500), new Point(-1, -5), new Point(110, 110), (100), 50);
+			for (int i = 0; i < numBodies; i++) {
+				if (i % 2 == 0)
+					new Body(new Point((100 * i), (100 * i)), new Point(i * 20, i * 20), new Point(30 * i, 30 * i),
+							ThreadLocalRandom.current().nextDouble(massMin, massMax + 1),
+							ThreadLocalRandom.current().nextDouble(sizeMin, sizeMax + 1));
+				else
+					new Body(new Point((70 * i), (20 * i)), new Point(i * 20, i * -20), new Point(30 * i, -30 * i),
+							ThreadLocalRandom.current().nextDouble(massMin, massMax + 1),
+							ThreadLocalRandom.current().nextDouble(sizeMin, sizeMax + 1));
+			}
+
+			Random rand = new Random();
+			for (int i = 0; i < numBodies; i++) {
+				new Body(new Point(rand.nextInt((300) + 1), rand.nextInt((300) + 1)),
+						new Point(rand.nextInt((20) + 1), rand.nextInt((20) + 1)),
+						new Point(rand.nextInt((10) + 1), rand.nextInt((10) + 1)),
+						ThreadLocalRandom.current().nextDouble(massMin, massMax + 1),
+						ThreadLocalRandom.current().nextDouble(sizeMin, sizeMax + 1));
+			}
+
+			// new Body(new Point(50, 5), new Point(0, 2), new Point(300, 300),
+			// (400), 30);
+			// new Body(new Point(30, 300), new Point(0, -2), new Point(1, 2),
+			// (20), 10);
+			// new Body(new Point(90, 500), new Point(-1, -5), new Point(110,
+			// 110), (100), 50);
 			sim = window.new Simulation();
 			sim.start();
 		}
@@ -102,8 +141,7 @@ public class Gui {
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize()
-	{
+	private void initialize() {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 734, 514);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -190,8 +228,7 @@ public class Gui {
 		 * 
 		 * @see javax.swing.JComponent#paint(java.awt.Graphics)
 		 */
-		public void paint(Graphics g)
-		{
+		public void paint(Graphics g) {
 			super.paint(g);
 			for (int i = 0; i < Body.getAllbodies().size(); i++) {
 				Body body = Body.getAllbodies().get(i);
@@ -204,6 +241,7 @@ public class Gui {
 	private class Simulation extends Thread {
 		private boolean running = true;
 		private boolean paused = false;
+		private double deltat = 125;
 
 		/*
 		 * (non-Javadoc)
@@ -211,19 +249,17 @@ public class Gui {
 		 * @see java.lang.Thread#run()
 		 */
 		@Override
-		public void run()
-		{
+		public void run() {
 			super.run();
 			while (running) {
 				if (!paused) {
+					// Body.setDeltaTime(deltat);
 					Body.calculateForces();
 					Body.moveBodies();
 					Body.collisions();
 					drawingPanel.repaint();
 					try {
-						this.sleep(100); // This allows the User to visually see
-											// what is happening, (decreasing
-											// the faster things move)
+						this.sleep(100);
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
