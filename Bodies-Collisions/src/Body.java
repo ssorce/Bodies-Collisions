@@ -1,6 +1,5 @@
 import java.awt.Point;
 import java.util.ArrayList;
-import java.util.Vector;
 
 /**
  * Object representing a body that will be simulated
@@ -24,45 +23,8 @@ public class Body {
 	private final double mass;
 	private final double radius;
 	private static final ArrayList<Body> allBodies = new ArrayList<>();
-	private static double gravity = 6.67e-11;// Jupiter Gravity 24.79
-												// m/s^2
-	private static double deltaTime; // deltaTime is the number of iterations
-										// (time steps for the sim)
-
-	public static void main(String[] args)
-	{
-		/*
-		 * Create bodies
-		 * 
-		 * run program for(int i = startTime; i < endTime; i+=deltaTime){
-		 * calculateForces(); moveBodies(); } end of program
-		 */
-
-		double i;
-		int x, j;
-		deltaTime = Double.parseDouble(args[0]);
-		int EndTime = Integer.parseInt(args[1]);
-		int numBodies = Integer.parseInt(args[2]);
-		// for (x = 0; x < numBodies; x++) {
-		// new Body(new Point((2 + x), (2 + x)), new Point(x - 1, x + 2), new
-		// Point(1 + x, 1 + x), (20 - (x * 3)), 5);
-		// }
-
-		// Testing Collisions
-		new Body(new Point(10, 20), new Point(0, 2), new Point(3, 3), (60), 30);
-		new Body(new Point(10, 50), new Point(0, -2), new Point(1, 1), (20), 10);
-
-		for (i = 0; i < EndTime; i = deltaTime + i) {
-			calculateForces();
-			moveBodies();
-			collisions();
-			for (j = 0; j < 2; j++) {
-				System.out.println("I: " + i + " J: " + j + " Location: (" + allBodies.get(j).position.getX() + ", "
-						+ allBodies.get(j).position.getY() + ")");
-			}
-			System.out.println();
-		}
-	}
+	private static double gravity = 6.67e-11;
+	private static double deltaTime; 
 
 	/**
 	 * Constructor for a Body
@@ -147,8 +109,7 @@ public class Body {
 		double XTop, Bottom, YTop, X2MinusX1, Y2MinusY1;
 		for (i = 0; i < allBodies.size() - 1; i++) {
 			for (int j = i + 1; j < allBodies.size(); j++) {
-				if (Math.abs(allBodies.get(i).position.distance(allBodies.get(j).position)) < (allBodies.get(i).radius
-						+ allBodies.get(j).radius)) {
+				if (Math.abs(allBodies.get(i).position.distance(allBodies.get(j).position)) < (allBodies.get(i).radius+ allBodies.get(j).radius)) {
 					X2MinusX1 = allBodies.get(j).getPosition().getX() - allBodies.get(i).getPosition().getX();
 					Y2MinusY1 = allBodies.get(j).getPosition().getY() - allBodies.get(i).getPosition().getY();
 					XTop = (allBodies.get(j).getVelocity().getX() * Math.pow(X2MinusX1, 2))
@@ -170,9 +131,6 @@ public class Body {
 							- (allBodies.get(j).getVelocity().getX() * Y2MinusY1 * X2MinusX1)
 							+ (allBodies.get(j).getVelocity().getY() * Math.pow(X2MinusX1, 2));
 					allBodies.get(j).velocity.setLocation(XTop / Bottom, YTop / Bottom);
-					System.out.println("Collision on from points:\n" + allBodies.get(i).getPosition() + "\n"
-							+ allBodies.get(j).getPosition() + "\n");
-
 				}
 			}
 		}

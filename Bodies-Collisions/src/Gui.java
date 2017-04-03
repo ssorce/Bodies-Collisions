@@ -31,21 +31,19 @@ public class Gui {
 	private static JFrame frame;
 	private static DrawingPanel drawingPanel;
 	private static Simulation sim;
-	private static double numBodies = 0;
-	private static double sizeMin = 0;
-	private static double sizeMax = 0;
-	private static double massMin = 0;
-	private static double massMax = 0;
-	private static int numOfThreads = 0;
+	private static double numBodies = 50;
+	private static double sizeMin = 10;
+	private static double sizeMax = 50;
+	private static double massMin = 10;
+	private static double massMax = 50;
+	private static int numOfThreads = 1;
 
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args)
-	{
+	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
-			public void run()
-			{
+			public void run() {
 				try {
 					new Gui();
 					Gui.frame.setVisible(true);
@@ -64,8 +62,7 @@ public class Gui {
 		initialize();
 	}
 
-	private static void newSimulation()
-	{
+	private static void newSimulation() {
 		if (sim != null)
 			sim.setRunning(false);
 		Body.clear();
@@ -89,34 +86,28 @@ public class Gui {
 		int result = JOptionPane.showConfirmDialog(Gui.frame, inputs, "New Simulation Setup",
 				JOptionPane.PLAIN_MESSAGE);
 		if (result == JOptionPane.OK_OPTION) {
-			numBodies = Double.parseDouble(numberOfBodies.getText());
-			sizeMin = 0;
-			sizeMax = 0;
+			if (numberOfBodies.getText().length() > 0)
+				numBodies = Double.parseDouble(numberOfBodies.getText());
 			if (sizeOfBodies.getText().contains("-")) {
 				String[] range = sizeOfBodies.getText().split("-");
 				sizeMin = Double.parseDouble(range[0]);
 				sizeMax = Double.parseDouble(range[1]);
-			}
-			else {
+			} else if (sizeOfBodies.getText().length() > 0) {
 				sizeMin = Double.parseDouble(sizeOfBodies.getText());
 				sizeMax = Double.parseDouble(sizeOfBodies.getText());
 			}
-			massMin = 0;
-			massMax = 0;
 			if (massOfBodies.getText().contains("-")) {
 				String[] range = massOfBodies.getText().split("-");
 				massMin = Double.parseDouble(range[0]);
 				massMax = Double.parseDouble(range[1]);
-			}
-			else {
+			} else if (massOfBodies.getText().length() > 0) {
 				massMin = Double.parseDouble(massOfBodies.getText());
 				massMax = Double.parseDouble(massOfBodies.getText());
 			}
-			if(sequential.isSelected()){
-				numOfThreads = 1;
-			} else {
+			if (parallel.isSelected())
 				numOfThreads = Integer.parseInt(numberOfThreads.getText());
-			}
+			else
+				numOfThreads = 1;
 			// Testing collisions and Visual
 			for (int i = 0; i < numBodies; i++) {
 				double size = ThreadLocalRandom.current().nextDouble(sizeMin, sizeMax + 1);
@@ -129,7 +120,7 @@ public class Gui {
 								ThreadLocalRandom.current().nextInt(-50, 50)),
 						new Point(ThreadLocalRandom.current().nextInt(-100, 100),
 								ThreadLocalRandom.current().nextInt(-100, 100)),
-						ThreadLocalRandom.current().nextDouble(massMin*10e10, massMax*10e10 + 1), size);
+						ThreadLocalRandom.current().nextDouble(massMin * 10e10, massMax * 10e10 + 1), size);
 			}
 
 			// new Body(new Point(50, 5), new Point(0, 2), new Point(300, 300),
@@ -138,14 +129,13 @@ public class Gui {
 			// (20), 10);
 			// new Body(new Point(90, 500), new Point(-1, -5), new Point(110,
 			// 110), (100), 50);
-			sim = new Simulation(1);
+			sim = new Simulation(numOfThreads);
 			Gui.frame.repaint();
 			sim.start();
 		}
 	}
 
-	private void reset()
-	{
+	private void reset() {
 		if (sim != null)
 			sim.setRunning(false);
 		Body.clear();
@@ -162,7 +152,7 @@ public class Gui {
 							ThreadLocalRandom.current().nextInt(-50, 50)),
 					ThreadLocalRandom.current().nextDouble(massMin, massMax + 1), size);
 		}
-		sim = new Simulation(1);
+		sim = new Simulation(numOfThreads);
 		Gui.frame.repaint();
 		sim.start();
 	}
@@ -170,8 +160,7 @@ public class Gui {
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize()
-	{
+	private void initialize() {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 734, 514);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -256,8 +245,7 @@ public class Gui {
 		 * 
 		 * @see javax.swing.JComponent#paint(java.awt.Graphics)
 		 */
-		public void paint(Graphics g)
-		{
+		public void paint(Graphics g) {
 			super.paint(g);
 			for (int i = 0; i < Body.getAllbodies().size(); i++) {
 				Body body = Body.getAllbodies().get(i);
@@ -270,8 +258,7 @@ public class Gui {
 		}
 	}
 
-	public static void repaint()
-	{
+	public static void repaint() {
 		frame.repaint();
 	}
 
