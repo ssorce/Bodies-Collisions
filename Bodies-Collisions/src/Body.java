@@ -1,5 +1,6 @@
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Vector;
 
 /**
  * Object representing a body that will be simulated
@@ -23,7 +24,8 @@ public class Body {
 	private final double mass;
 	private final double radius;
 	private static final ArrayList<Body> allBodies = new ArrayList<>();
-	private static final double gravity = 6.67e-11;// Jupiter Gravity 24.79 m/s^2
+	private static final double gravity = 6.67e-11;// Jupiter Gravity 24.79
+													// m/s^2
 	private static double deltaTime; // deltaTime is the number of iterations
 										// (time steps for the sim)
 
@@ -95,7 +97,7 @@ public class Body {
 		Point direction = new Point();
 		for (int i = 0; i < allBodies.size() - 1; i++) {
 			for (int j = i + 1; j < allBodies.size(); j++) {
-				// set the direction
+				// set the distance
 				distance = Math.sqrt(Math.pow(allBodies.get(i).position.getX() - allBodies.get(j).position.getX(), 2)
 						+ Math.pow(allBodies.get(i).position.getY() - allBodies.get(j).position.getY(), 2));
 				// set the magnitude
@@ -142,35 +144,43 @@ public class Body {
 	public static void collisions()
 	{
 		int i;
-		boolean[] switched = new boolean[allBodies.size()];
-		for (i = 0; i < allBodies.size(); i++) {
-			switched[i] = false;
-		}
 		for (i = 0; i < allBodies.size() - 1; i++) {
 			for (int j = i + 1; j < allBodies.size(); j++) {
-				// Going to have to find the at which collision happened to be
-				// more precise
-				if (Math.abs(allBodies.get(i).position.distance(allBodies.get(j).position)) <= Math
-						.max(allBodies.get(i).radius, allBodies.get(j).radius) && !switched[i] && !switched[j]) {
-					System.out.println("A collision happened on i: " + i + " and j: " + j + "\nLocations:");
-					System.out.println("i: " + allBodies.get(i).position + "\nj: " + allBodies.get(j).position);
-					allBodies.get(i).velocity.setLocation(allBodies.get(i).velocity.getX() * -1,
-							allBodies.get(i).velocity.getY() * -1);
-					System.out.println("New velocity: " + allBodies.get(i).velocity);
-					allBodies.get(j).velocity.setLocation(allBodies.get(j).velocity.getX() * -1,
-							allBodies.get(j).velocity.getY() * -1);
-					System.out.println("New velocity: " + allBodies.get(j).velocity);
-					System.out.println();
-					switched[i] = true;
-					switched[j] = true;
+				if (Math.abs(allBodies.get(i).position.distance(allBodies.get(j).position)) < (allBodies.get(i).radius
+						+ allBodies.get(j).radius)) {
+					/*
+					 * newVelX = (firstBall.speed.x * (firstBall.mass –
+					 * secondBall.mass) + (2 * secondBall.mass *
+					 * secondBall.speed.x))  / (firstBall.mass +
+					 * secondBall.mass);
+					 */
+					allBodies.get(i).velocity.setLocation(
+							(allBodies.get(i).getVelocity().getX()
+									* (allBodies.get(i).getMass() - allBodies.get(j).getMass())
+									+ (2 * allBodies.get(j).getMass() * allBodies.get(j).getVelocity().getX()))
+									/ (allBodies.get(i).getMass() + allBodies.get(j).getMass()),
+							(allBodies.get(i).getVelocity().getY()
+									* (allBodies.get(i).getMass() - allBodies.get(j).getMass())
+									+ (2 * allBodies.get(j).getMass() * allBodies.get(j).getVelocity().getY()))
+									/ (allBodies.get(i).getMass() + allBodies.get(j).getMass()));
+					allBodies.get(j).velocity.setLocation(
+							(allBodies.get(j).getVelocity().getX()
+									* (allBodies.get(j).getMass() - allBodies.get(i).getMass())
+									+ (2 * allBodies.get(i).getMass() * allBodies.get(i).getVelocity().getX()))
+									/ (allBodies.get(j).getMass() + allBodies.get(i).getMass()),
+							(allBodies.get(j).getVelocity().getY()
+									* (allBodies.get(j).getMass() - allBodies.get(i).getMass())
+									+ (2 * allBodies.get(i).getMass() * allBodies.get(i).getVelocity().getY()))
+									/ (allBodies.get(j).getMass() + allBodies.get(i).getMass()));
 
 				}
 			}
 		}
 	}
-	
-	public static void clear(){
-		for(int i = allBodies.size()-1; i >= 0; i--){
+
+	public static void clear()
+	{
+		for (int i = allBodies.size() - 1; i >= 0; i--) {
 			allBodies.remove(i);
 		}
 	}

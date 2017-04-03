@@ -40,9 +40,11 @@ public class Gui {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args)
+	{
 		EventQueue.invokeLater(new Runnable() {
-			public void run() {
+			public void run()
+			{
 				try {
 					new Gui();
 					Gui.frame.setVisible(true);
@@ -61,7 +63,8 @@ public class Gui {
 		initialize();
 	}
 
-	private static void newSimulation() {
+	private static void newSimulation()
+	{
 		if (sim != null)
 			sim.setRunning(false);
 		Body.clear();
@@ -92,7 +95,8 @@ public class Gui {
 				String[] range = sizeOfBodies.getText().split("-");
 				sizeMin = Double.parseDouble(range[0]);
 				sizeMax = Double.parseDouble(range[1]);
-			} else {
+			}
+			else {
 				sizeMin = Double.parseDouble(sizeOfBodies.getText());
 				sizeMax = Double.parseDouble(sizeOfBodies.getText());
 			}
@@ -102,7 +106,8 @@ public class Gui {
 				String[] range = massOfBodies.getText().split("-");
 				massMin = Double.parseDouble(range[0]);
 				massMax = Double.parseDouble(range[1]);
-			} else {
+			}
+			else {
 				massMin = Double.parseDouble(massOfBodies.getText());
 				massMax = Double.parseDouble(massOfBodies.getText());
 			}
@@ -132,8 +137,9 @@ public class Gui {
 			sim.start();
 		}
 	}
-	
-	private void reset(){
+
+	private void reset()
+	{
 		if (sim != null)
 			sim.setRunning(false);
 		Body.clear();
@@ -158,7 +164,8 @@ public class Gui {
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize() {
+	private void initialize()
+	{
 		frame = new JFrame();
 		frame.setBounds(100, 100, 734, 514);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -176,7 +183,7 @@ public class Gui {
 		mnSettings.add(mntmNewSimulation);
 
 		JMenuItem mntmResetSimulation = new JMenuItem("Reset Simulation");
-		mntmResetSimulation.addActionListener(e->{
+		mntmResetSimulation.addActionListener(e -> {
 			reset();
 		});
 		mnSettings.add(mntmResetSimulation);
@@ -204,7 +211,7 @@ public class Gui {
 		deltavSlider.addChangeListener(e -> {
 			double newdeltaT = Math.pow(deltavSlider.getValue() / 10.0, 3);
 			deltavValue.setText(String.format("%1$,.2f", newdeltaT));
-			if(sim!=null)
+			if (sim != null)
 				sim.setDeltat(newdeltaT);
 		});
 		deltavSlider.setPaintTicks(true);
@@ -227,7 +234,7 @@ public class Gui {
 		verticalBox.add(lblZoom);
 
 		JSlider zoomSlider = new JSlider(JSlider.VERTICAL, 1, 11, 5);
-		zoomSlider.addChangeListener(e->{
+		zoomSlider.addChangeListener(e -> {
 			drawingPanel.zoom = zoomSlider.getValue();
 		});
 		zoomSlider.setPreferredSize(new Dimension(20, 375));
@@ -237,24 +244,29 @@ public class Gui {
 	private class DrawingPanel extends JPanel {
 		private static final long serialVersionUID = 4036353244873565355L;
 		private double zoom = 5;
+
 		/*
 		 * (non-Javadoc)
 		 * 
 		 * @see javax.swing.JComponent#paint(java.awt.Graphics)
 		 */
-		public void paint(Graphics g) {
+		public void paint(Graphics g)
+		{
 			super.paint(g);
 			for (int i = 0; i < Body.getAllbodies().size(); i++) {
 				Body body = Body.getAllbodies().get(i);
-				g.fillOval((int) (body.getPosition().getX()*1/zoom), (int) (body.getPosition().getY()*1/zoom), (int) (body.getRadius()*1/zoom),
-						(int) (body.getRadius()*1/zoom));
+				// fill starts at the top left of the Oval, position is at the
+				// center
+				g.fillOval((int) ((body.getPosition().getX() - body.getRadius()) * 1 / zoom),
+						(int) ((body.getPosition().getY() + body.getRadius()) * 1 / zoom),
+						(int) (body.getRadius() * 1 / zoom), (int) (body.getRadius() * 1 / zoom));
 			}
 		}
 	}
 
-	public static void repaint() {
+	public static void repaint()
+	{
 		frame.repaint();
 	}
-
 
 }
