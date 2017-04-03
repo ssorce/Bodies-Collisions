@@ -13,13 +13,6 @@ public class Simulation extends Thread {
 	private double deltat = 1;
 	
 	/**
-	 * Constructor for a single threaded simulation
-	 */
-	public Simulation(){
-		
-	}
-	
-	/**
 	 * Constructor for a multithreaded simulation
 	 * @param numberOThreads
 	 */

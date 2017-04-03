@@ -36,6 +36,7 @@ public class Gui {
 	private static double sizeMax = 0;
 	private static double massMin = 0;
 	private static double massMax = 0;
+	private static int numOfThreads = 0;
 
 	/**
 	 * Launch the application.
@@ -111,6 +112,11 @@ public class Gui {
 				massMin = Double.parseDouble(massOfBodies.getText());
 				massMax = Double.parseDouble(massOfBodies.getText());
 			}
+			if(sequential.isSelected()){
+				numOfThreads = 1;
+			} else {
+				numOfThreads = Integer.parseInt(numberOfThreads.getText());
+			}
 			// Testing collisions and Visual
 			for (int i = 0; i < numBodies; i++) {
 				double size = ThreadLocalRandom.current().nextDouble(sizeMin, sizeMax + 1);
@@ -123,7 +129,7 @@ public class Gui {
 								ThreadLocalRandom.current().nextInt(-50, 50)),
 						new Point(ThreadLocalRandom.current().nextInt(-100, 100),
 								ThreadLocalRandom.current().nextInt(-100, 100)),
-						ThreadLocalRandom.current().nextDouble(massMin, massMax + 1), size);
+						ThreadLocalRandom.current().nextDouble(massMin*10e10, massMax*10e10 + 1), size);
 			}
 
 			// new Body(new Point(50, 5), new Point(0, 2), new Point(300, 300),
@@ -132,7 +138,7 @@ public class Gui {
 			// (20), 10);
 			// new Body(new Point(90, 500), new Point(-1, -5), new Point(110,
 			// 110), (100), 50);
-			sim = new Simulation();
+			sim = new Simulation(1);
 			Gui.frame.repaint();
 			sim.start();
 		}
@@ -156,7 +162,7 @@ public class Gui {
 							ThreadLocalRandom.current().nextInt(-50, 50)),
 					ThreadLocalRandom.current().nextDouble(massMin, massMax + 1), size);
 		}
-		sim = new Simulation();
+		sim = new Simulation(1);
 		Gui.frame.repaint();
 		sim.start();
 	}
