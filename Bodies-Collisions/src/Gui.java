@@ -118,11 +118,11 @@ public class Gui {
 						new Point(
 								(int) (size + ((i > 0) ? Body.getAllbodies().get(i - 1).getRadius()
 										+ Body.getAllbodies().get(i - 1).getPosition().getX() : 0)),
-								ThreadLocalRandom.current().nextInt(-50, 50)),
+								ThreadLocalRandom.current().nextInt(-300, 300)),
 						new Point(ThreadLocalRandom.current().nextInt(-50, 50),
 								ThreadLocalRandom.current().nextInt(-50, 50)),
-						new Point(ThreadLocalRandom.current().nextInt(-50, 50),
-								ThreadLocalRandom.current().nextInt(-50, 50)),
+						new Point(ThreadLocalRandom.current().nextInt(-100, 100),
+								ThreadLocalRandom.current().nextInt(-100, 100)),
 						ThreadLocalRandom.current().nextDouble(massMin, massMax + 1), size);
 			}
 

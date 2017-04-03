@@ -24,8 +24,8 @@ public class Body {
 	private final double mass;
 	private final double radius;
 	private static final ArrayList<Body> allBodies = new ArrayList<>();
-	private static final double gravity = 6.67e-11;// Jupiter Gravity 24.79
-													// m/s^2
+	private static double gravity = 6.67e-11;// Jupiter Gravity 24.79
+												// m/s^2
 	private static double deltaTime; // deltaTime is the number of iterations
 										// (time steps for the sim)
 
@@ -144,37 +144,34 @@ public class Body {
 	public static void collisions()
 	{
 		int i;
+		double XTop, Bottom, YTop, X2MinusX1, Y2MinusY1;
 		for (i = 0; i < allBodies.size() - 1; i++) {
 			for (int j = i + 1; j < allBodies.size(); j++) {
 				if (Math.abs(allBodies.get(i).position.distance(allBodies.get(j).position)) < (allBodies.get(i).radius
 						+ allBodies.get(j).radius)) {
-					/*
-					 * newVelX = (firstBall.speed.x * (firstBall.mass –
-					 * secondBall.mass) + (2 * secondBall.mass *
-					 * secondBall.speed.x))  / (firstBall.mass +
-					 * secondBall.mass);
-					 */
-					allBodies.get(i).velocity.setLocation(
-							(allBodies.get(i).getVelocity().getX()
-									* (allBodies.get(i).getMass() - allBodies.get(j).getMass())
-									+ (2 * allBodies.get(j).getMass() * allBodies.get(j).getVelocity().getX()))
-									/ (allBodies.get(i).getMass() + allBodies.get(j).getMass()),
-							(allBodies.get(i).getVelocity().getY()
-									* (allBodies.get(i).getMass() - allBodies.get(j).getMass())
-									+ (2 * allBodies.get(j).getMass() * allBodies.get(j).getVelocity().getY()))
-									/ (allBodies.get(i).getMass() + allBodies.get(j).getMass()));
-					allBodies.get(j).velocity.setLocation(
-							(allBodies.get(j).getVelocity().getX()
-									* (allBodies.get(j).getMass() - allBodies.get(i).getMass())
-									+ (2 * allBodies.get(i).getMass() * allBodies.get(i).getVelocity().getX()))
-									/ (allBodies.get(j).getMass() + allBodies.get(i).getMass()),
-							(allBodies.get(j).getVelocity().getY()
-									* (allBodies.get(j).getMass() - allBodies.get(i).getMass())
-									+ (2 * allBodies.get(i).getMass() * allBodies.get(i).getVelocity().getY()))
-									/ (allBodies.get(j).getMass() + allBodies.get(i).getMass()));
-
+					X2MinusX1 = allBodies.get(j).getPosition().getX() - allBodies.get(i).getPosition().getX();
+					Y2MinusY1 = allBodies.get(j).getPosition().getY() - allBodies.get(i).getPosition().getY();
+					XTop = (allBodies.get(j).getVelocity().getX() * Math.pow(X2MinusX1, 2))
+							+ (allBodies.get(j).getVelocity().getY() * X2MinusX1 * Y2MinusY1)
+							+ (allBodies.get(i).getVelocity().getX() * Math.pow(Y2MinusY1, 2))
+							- (allBodies.get(i).getVelocity().getY() * X2MinusX1 * Y2MinusY1);
+					YTop = (allBodies.get(j).getVelocity().getX() * X2MinusX1 * Y2MinusY1)
+							+ (allBodies.get(j).getVelocity().getY() * Math.pow(Y2MinusY1, 2))
+							- (allBodies.get(i).getVelocity().getX() * Y2MinusY1 * X2MinusX1)
+							+ (allBodies.get(i).getVelocity().getY() * Math.pow(X2MinusX1, 2));
+					Bottom = Math.pow(X2MinusX1, 2) + Math.pow(Y2MinusY1, 2);
+					allBodies.get(i).velocity.setLocation(XTop / Bottom, YTop / Bottom);
+					XTop = (allBodies.get(i).getVelocity().getX() * Math.pow(X2MinusX1, 2))
+							+ (allBodies.get(i).getVelocity().getY() * X2MinusX1 * Y2MinusY1)
+							+ (allBodies.get(j).getVelocity().getX() * Math.pow(Y2MinusY1, 2))
+							- (allBodies.get(j).getVelocity().getY() * X2MinusX1 * Y2MinusY1);
+					YTop = (allBodies.get(i).getVelocity().getX() * X2MinusX1 * Y2MinusY1)
+							+ (allBodies.get(i).getVelocity().getY() * Math.pow(Y2MinusY1, 2))
+							- (allBodies.get(j).getVelocity().getX() * Y2MinusY1 * X2MinusX1)
+							+ (allBodies.get(j).getVelocity().getY() * Math.pow(X2MinusX1, 2));
+					allBodies.get(j).velocity.setLocation(XTop / Bottom, YTop / Bottom);
 					System.out.println("Collision on from points:\n" + allBodies.get(i).getPosition() + "\n"
-							+ allBodies.get(j).getPosition());
+							+ allBodies.get(j).getPosition() + "\n");
 
 				}
 			}
@@ -286,6 +283,11 @@ public class Body {
 	public static double getGravity()
 	{
 		return gravity;
+	}
+
+	public static void setGravity(double g)
+	{
+		gravity = g;
 	}
 
 }
