@@ -139,7 +139,7 @@ public class Body {
 
 	/*
 	 * Finds out if collision happened then switches the velocity of the bodies
-	 * (currently it is inelastic)
+	 * (currently it is elastic)
 	 */
 	public static void collisions()
 	{
@@ -172,6 +172,9 @@ public class Body {
 									* (allBodies.get(j).getMass() - allBodies.get(i).getMass())
 									+ (2 * allBodies.get(i).getMass() * allBodies.get(i).getVelocity().getY()))
 									/ (allBodies.get(j).getMass() + allBodies.get(i).getMass()));
+
+					System.out.println("Collision on from points:\n" + allBodies.get(i).getPosition() + "\n"
+							+ allBodies.get(j).getPosition());
 
 				}
 			}
