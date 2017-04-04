@@ -31,12 +31,13 @@ public class Gui {
 	private static JFrame frame;
 	private static DrawingPanel drawingPanel;
 	private static Simulation sim;
-	private static double numBodies = 50;
+	private static int numBodies = 50;
 	private static double sizeMin = 10;
 	private static double sizeMax = 50;
 	private static double massMin = 10;
 	private static double massMax = 50;
 	private static int numOfThreads = 1;
+	public static boolean isActive = false;
 
 	/**
 	 * Launch the application.
@@ -59,6 +60,7 @@ public class Gui {
 	 * Create the application.
 	 */
 	public Gui() {
+		isActive = true;
 		initialize();
 	}
 
@@ -87,7 +89,7 @@ public class Gui {
 				JOptionPane.PLAIN_MESSAGE);
 		if (result == JOptionPane.OK_OPTION) {
 			if (numberOfBodies.getText().length() > 0)
-				numBodies = Double.parseDouble(numberOfBodies.getText());
+				numBodies = Integer.parseInt(numberOfBodies.getText());
 			if (sizeOfBodies.getText().contains("-")) {
 				String[] range = sizeOfBodies.getText().split("-");
 				sizeMin = Double.parseDouble(range[0]);
@@ -129,7 +131,7 @@ public class Gui {
 			// (20), 10);
 			// new Body(new Point(90, 500), new Point(-1, -5), new Point(110,
 			// 110), (100), 50);
-			sim = new Simulation(numOfThreads);
+			sim = new Simulation(numOfThreads, numBodies, -1);
 			Gui.frame.repaint();
 			sim.start();
 		}
@@ -152,7 +154,7 @@ public class Gui {
 							ThreadLocalRandom.current().nextInt(-50, 50)),
 					ThreadLocalRandom.current().nextDouble(massMin, massMax + 1), size);
 		}
-		sim = new Simulation(numOfThreads);
+		sim = new Simulation(numOfThreads, numBodies, -1);
 		Gui.frame.repaint();
 		sim.start();
 	}

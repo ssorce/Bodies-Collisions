@@ -24,7 +24,7 @@ public class Body {
 	private final double radius;
 	private static final ArrayList<Body> allBodies = new ArrayList<>();
 	private static double gravity = 6.67e-11;
-	private static double deltaTime; 
+	private static double deltaTime;
 
 	/**
 	 * Constructor for a Body
@@ -52,12 +52,11 @@ public class Body {
 	/*
 	 * This is going to calculate forces for all the bodies
 	 */
-	public static void calculateForces()
-	{
+	public static void calculateForces(int start, int end) {
 		double distance;
 		double magnitude;
 		Point direction = new Point();
-		for (int i = 0; i < allBodies.size() - 1; i++) {
+		for (int i = start; i < end; i++) {
 			for (int j = i + 1; j < allBodies.size(); j++) {
 				// set the distance
 				distance = Math.sqrt(Math.pow(allBodies.get(i).position.getX() - allBodies.get(j).position.getX(), 2)
@@ -82,11 +81,10 @@ public class Body {
 	/**
 	 * Move of All Bodies
 	 */
-	public static void moveBodies()
-	{
+	public static void moveBodies(int start, int end) {
 		Point deltav = new Point();
 		Point deltap = new Point();
-		for (int i = 0; i < allBodies.size(); i++) {
+		for (int i = start; i < end; i++) {
 			deltav.setLocation((allBodies.get(i).force.getX() / allBodies.get(i).mass) * deltaTime,
 					(allBodies.get(i).force.getY() / allBodies.get(i).mass) * deltaTime);
 			deltap.setLocation(((allBodies.get(i).velocity.getX() + ((deltav.getX())) / 2)) * deltaTime,
@@ -103,13 +101,13 @@ public class Body {
 	 * Finds out if collision happened then switches the velocity of the bodies
 	 * (currently it is elastic)
 	 */
-	public static void collisions()
-	{
+	public static void collisions(int start, int end) {
 		int i;
 		double XTop, Bottom, YTop, X2MinusX1, Y2MinusY1;
-		for (i = 0; i < allBodies.size() - 1; i++) {
+		for (i = start; i < end; i++) {
 			for (int j = i + 1; j < allBodies.size(); j++) {
-				if (Math.abs(allBodies.get(i).position.distance(allBodies.get(j).position)) < (allBodies.get(i).radius+ allBodies.get(j).radius)) {
+				if (Math.abs(allBodies.get(i).position.distance(allBodies.get(j).position)) < (allBodies.get(i).radius
+						+ allBodies.get(j).radius)) {
 					X2MinusX1 = allBodies.get(j).getPosition().getX() - allBodies.get(i).getPosition().getX();
 					Y2MinusY1 = allBodies.get(j).getPosition().getY() - allBodies.get(i).getPosition().getY();
 					XTop = (allBodies.get(j).getVelocity().getX() * Math.pow(X2MinusX1, 2))
@@ -136,8 +134,7 @@ public class Body {
 		}
 	}
 
-	public static void clear()
-	{
+	public static void clear() {
 		for (int i = allBodies.size() - 1; i >= 0; i--) {
 			allBodies.remove(i);
 		}
@@ -146,8 +143,7 @@ public class Body {
 	/**
 	 * @return the position
 	 */
-	public Point getPosition()
-	{
+	public Point getPosition() {
 		return position;
 	}
 
@@ -155,16 +151,14 @@ public class Body {
 	 * @param position
 	 *            the position to set
 	 */
-	public void setPosition(Point position)
-	{
+	public void setPosition(Point position) {
 		this.position = position;
 	}
 
 	/**
 	 * @return the velocity
 	 */
-	public Point getVelocity()
-	{
+	public Point getVelocity() {
 		return velocity;
 	}
 
@@ -172,16 +166,14 @@ public class Body {
 	 * @param velocity
 	 *            the velocity to set
 	 */
-	public void setVelocity(Point velocity)
-	{
+	public void setVelocity(Point velocity) {
 		this.velocity = velocity;
 	}
 
 	/**
 	 * @return the force
 	 */
-	public Point getForce()
-	{
+	public Point getForce() {
 		return force;
 	}
 
@@ -189,16 +181,14 @@ public class Body {
 	 * @param force
 	 *            the force to set
 	 */
-	public void setForce(Point force)
-	{
+	public void setForce(Point force) {
 		this.force = force;
 	}
 
 	/**
 	 * @return the deltaTime
 	 */
-	public static double getDeltaTime()
-	{
+	public static double getDeltaTime() {
 		return deltaTime;
 	}
 
@@ -206,45 +196,39 @@ public class Body {
 	 * @param deltaTime
 	 *            the deltaTime to set
 	 */
-	public static void setDeltaTime(double deltaTime)
-	{
+	public static void setDeltaTime(double deltaTime) {
 		Body.deltaTime = deltaTime;
 	}
 
 	/**
 	 * @return the mass
 	 */
-	public double getMass()
-	{
+	public double getMass() {
 		return mass;
 	}
 
 	/**
 	 * @return the radius
 	 */
-	public double getRadius()
-	{
+	public double getRadius() {
 		return radius;
 	}
 
 	/**
 	 * @return the allbodies
 	 */
-	public static ArrayList<Body> getAllbodies()
-	{
+	public static ArrayList<Body> getAllbodies() {
 		return allBodies;
 	}
 
 	/**
 	 * @return the gravity
 	 */
-	public static double getGravity()
-	{
+	public static double getGravity() {
 		return gravity;
 	}
 
-	public static void setGravity(double g)
-	{
+	public static void setGravity(double g) {
 		gravity = g;
 	}
 
