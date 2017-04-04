@@ -12,7 +12,7 @@ public class Simulation extends Thread {
 
 	private static boolean running = true;
 	private static boolean paused = false;
-	private static double deltat = 1;
+	private static double deltat = 0.5;
 	private static int numberOfThreads;
 	private static int maxIterations;
 	private static int numberOfObjects;
@@ -80,7 +80,7 @@ public class Simulation extends Thread {
 			//initialize semaphores
 			sem = new Semaphore[stages];
 			for(int i = 0; i < stages; i++)
-				sem[i] = new Semaphore(1);
+				sem[i] = new Semaphore(0);
 		}
 		
 		/*
@@ -91,11 +91,13 @@ public class Simulation extends Thread {
 		@Override
 		public void run() {
 			super.run();
+			System.out.println("Thread " + threadID + " entered start : " + start + " end : " + end);
 			try {
 				wait.acquire();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
+			System.out.println("Thread " + threadID + " starting start : " + start + " end : " + end);
 			while (running) {
 				if (!paused) {
 					if(threadID == 0)
@@ -107,10 +109,15 @@ public class Simulation extends Thread {
 					barrier();
 					Body.collisions(start,end);
 					barrier();
-					if(threadID == 0 && Gui.isActive){
+					if(threadID == 0 && Gui.isActive)
 						Gui.repaint();
-					System.out.println(deltat);
+					try {
+						Thread.sleep(10);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
 					}
+					System.out.println("Thread " + threadID + " finished start : " + start + " end : " + end);
+					
 				}
 			}
 		}
