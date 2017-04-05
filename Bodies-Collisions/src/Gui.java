@@ -42,9 +42,11 @@ public class Gui {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args)
+	{
 		EventQueue.invokeLater(new Runnable() {
-			public void run() {
+			public void run()
+			{
 				try {
 					new Gui();
 					Gui.frame.setVisible(true);
@@ -64,7 +66,8 @@ public class Gui {
 		initialize();
 	}
 
-	private static void newSimulation() {
+	private static void newSimulation()
+	{
 		if (sim != null)
 			sim.setRunning(false);
 		Body.clear();
@@ -94,7 +97,8 @@ public class Gui {
 				String[] range = sizeOfBodies.getText().split("-");
 				sizeMin = Double.parseDouble(range[0]);
 				sizeMax = Double.parseDouble(range[1]);
-			} else if (sizeOfBodies.getText().length() > 0) {
+			}
+			else if (sizeOfBodies.getText().length() > 0) {
 				sizeMin = Double.parseDouble(sizeOfBodies.getText());
 				sizeMax = Double.parseDouble(sizeOfBodies.getText());
 			}
@@ -102,7 +106,8 @@ public class Gui {
 				String[] range = massOfBodies.getText().split("-");
 				massMin = Double.parseDouble(range[0]);
 				massMax = Double.parseDouble(range[1]);
-			} else if (massOfBodies.getText().length() > 0) {
+			}
+			else if (massOfBodies.getText().length() > 0) {
 				massMin = Double.parseDouble(massOfBodies.getText());
 				massMax = Double.parseDouble(massOfBodies.getText());
 			}
@@ -110,8 +115,8 @@ public class Gui {
 				numOfThreads = Integer.parseInt(numberOfThreads.getText());
 			else
 				numOfThreads = 1;
-			// Testing collisions and Visual
 
+			// Adding making the bodies
 			for (int i = 0; i < numBodies; i++) {
 				double size = ThreadLocalRandom.current().nextDouble(sizeMin, sizeMax + 1);
 				new Body(
@@ -126,13 +131,14 @@ public class Gui {
 						ThreadLocalRandom.current().nextDouble(massMin * 10e10, massMax * 10e10 + 1), size);
 			}
 
-			sim = new Simulation(numOfThreads, numBodies, -1);
+			sim = new Simulation(numOfThreads, numBodies, -1, true);
 			Gui.frame.repaint();
 			sim.start();
 		}
 	}
 
-	private void reset() {
+	private void reset()
+	{
 		if (sim != null)
 			sim.setRunning(false);
 		Body.clear();
@@ -142,22 +148,24 @@ public class Gui {
 					new Point(
 							(int) (size + ((i > 0) ? Body.getAllbodies().get(i - 1).getRadius()
 									+ Body.getAllbodies().get(i - 1).getPosition().getX() : 0)),
-							ThreadLocalRandom.current().nextInt(-50, 50)),
+							ThreadLocalRandom.current().nextInt(0, 2000)),
 					new Point(ThreadLocalRandom.current().nextInt(-50, 50),
 							ThreadLocalRandom.current().nextInt(-50, 50)),
-					new Point(ThreadLocalRandom.current().nextInt(-50, 50),
-							ThreadLocalRandom.current().nextInt(-50, 50)),
-					ThreadLocalRandom.current().nextDouble(massMin, massMax + 1), size);
+					new Point(ThreadLocalRandom.current().nextInt(-100, 100),
+							ThreadLocalRandom.current().nextInt(-100, 100)),
+					ThreadLocalRandom.current().nextDouble(massMin * 10e10, massMax * 10e10 + 1), size);
 		}
-		sim = new Simulation(numOfThreads, numBodies, -1);
+		sim = new Simulation(numOfThreads, numBodies, -1, true);
 		Gui.frame.repaint();
 		sim.start();
+		sim.setRunning(true);
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize() {
+	private void initialize()
+	{
 		frame = new JFrame();
 		frame.setBounds(100, 100, 734, 514);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -242,7 +250,8 @@ public class Gui {
 		 * 
 		 * @see javax.swing.JComponent#paint(java.awt.Graphics)
 		 */
-		public void paint(Graphics g) {
+		public void paint(Graphics g)
+		{
 			super.paint(g);
 			for (int i = 0; i < Body.getAllbodies().size(); i++) {
 				Body body = Body.getAllbodies().get(i);
@@ -255,7 +264,8 @@ public class Gui {
 		}
 	}
 
-	public static void repaint() {
+	public static void repaint()
+	{
 		frame.repaint();
 	}
 

@@ -1,5 +1,8 @@
+import java.awt.EventQueue;
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Scanner;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Object representing a body that will be simulated
@@ -25,6 +28,87 @@ public class Body {
 	private static final ArrayList<Body> allBodies = new ArrayList<>();
 	private static double gravity = 6.67e-11;
 	private static double deltaTime;
+
+	public static void main(String args[])
+	{
+		int bodies, threads;
+		Double massMin, massMax, radiusMin, radiusMax;
+		Simulation sim;
+		String str = new String();
+		if (args.length < 4) {
+			Scanner keyboard = new Scanner(System.in);
+			System.out.print("How many bodies: ");
+			str = keyboard.next();
+			bodies = Integer.parseInt(str);
+			System.out.print("What are the Sizes: ");
+			str = keyboard.next();
+			if (str.contains("-")) {
+				String[] split = str.split("-");
+				radiusMin = Double.parseDouble(split[0]);
+				radiusMax = Double.parseDouble(split[1]);
+			}
+			else {
+				radiusMin = Double.parseDouble(str);
+				radiusMax = Double.parseDouble(str);
+			}
+			System.out.print("What are the Masses: ");
+			str = keyboard.next();
+			if (str.contains("-")) {
+				String[] split = str.split("-");
+				massMin = Double.parseDouble(split[0]);
+				massMax = Double.parseDouble(split[1]);
+			}
+			else {
+				massMin = Double.parseDouble(str);
+				massMax = Double.parseDouble(str);
+			}
+			System.out.print("How many threads: ");
+			threads = Integer.parseInt(keyboard.next());
+
+		}
+		else {
+			str = args[0];
+			bodies = Integer.parseInt(str);
+			str = args[1];
+			if (str.contains("-")) {
+				String[] split = str.split("-");
+				radiusMin = Double.parseDouble(split[0]);
+				radiusMax = Double.parseDouble(split[1]);
+			}
+			else {
+				radiusMin = Double.parseDouble(str);
+				radiusMax = Double.parseDouble(str);
+			}
+			str = args[2];
+			if (str.contains("-")) {
+				String[] split = str.split("-");
+				massMin = Double.parseDouble(split[0]);
+				massMax = Double.parseDouble(split[1]);
+			}
+			else {
+				massMin = Double.parseDouble(str);
+				massMax = Double.parseDouble(str);
+			}
+			threads = Integer.parseInt(args[3]);
+		}
+
+		for (int i = 0; i < bodies; i++) {
+			double size = ThreadLocalRandom.current().nextDouble(radiusMin, radiusMax + 1);
+			new Body(
+					new Point(
+							(int) (size + ((i > 0) ? Body.getAllbodies().get(i - 1).getRadius()
+									+ Body.getAllbodies().get(i - 1).getPosition().getX() : 0)),
+							ThreadLocalRandom.current().nextInt(0, 2000)),
+					new Point(ThreadLocalRandom.current().nextInt(-50, 50),
+							ThreadLocalRandom.current().nextInt(-50, 50)),
+					new Point(ThreadLocalRandom.current().nextInt(-100, 100),
+							ThreadLocalRandom.current().nextInt(-100, 100)),
+					ThreadLocalRandom.current().nextDouble(massMin * 10e10, massMax * 10e10 + 1), size);
+		}
+
+		sim = new Simulation(threads, bodies, -1, false);
+		sim.start();
+	}
 
 	/**
 	 * Constructor for a Body
