@@ -42,9 +42,11 @@ public class Gui {
 	/**
 	 * Launch the application.
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args)
+	{
 		EventQueue.invokeLater(new Runnable() {
-			public void run() {
+			public void run()
+			{
 				try {
 					new Gui();
 					Gui.frame.setVisible(true);
@@ -64,7 +66,8 @@ public class Gui {
 		initialize();
 	}
 
-	private static void newSimulation() {
+	private static void newSimulation()
+	{
 		if (sim != null)
 			sim.setRunning(false);
 		Body.clear();
@@ -94,7 +97,8 @@ public class Gui {
 				String[] range = sizeOfBodies.getText().split("-");
 				sizeMin = Double.parseDouble(range[0]);
 				sizeMax = Double.parseDouble(range[1]);
-			} else if (sizeOfBodies.getText().length() > 0) {
+			}
+			else if (sizeOfBodies.getText().length() > 0) {
 				sizeMin = Double.parseDouble(sizeOfBodies.getText());
 				sizeMax = Double.parseDouble(sizeOfBodies.getText());
 			}
@@ -102,7 +106,8 @@ public class Gui {
 				String[] range = massOfBodies.getText().split("-");
 				massMin = Double.parseDouble(range[0]);
 				massMax = Double.parseDouble(range[1]);
-			} else if (massOfBodies.getText().length() > 0) {
+			}
+			else if (massOfBodies.getText().length() > 0) {
 				massMin = Double.parseDouble(massOfBodies.getText());
 				massMax = Double.parseDouble(massOfBodies.getText());
 			}
@@ -111,26 +116,44 @@ public class Gui {
 			else
 				numOfThreads = 1;
 			// Testing collisions and Visual
-			for (int i = 0; i < numBodies; i++) {
-				double size = ThreadLocalRandom.current().nextDouble(sizeMin, sizeMax + 1);
-				new Body(
-						new Point(
-								(int) (size + ((i > 0) ? Body.getAllbodies().get(i - 1).getRadius()
-										+ Body.getAllbodies().get(i - 1).getPosition().getX() : 0)),
-								ThreadLocalRandom.current().nextInt(0, 2000)),
-						new Point(ThreadLocalRandom.current().nextInt(-50, 50),
-								ThreadLocalRandom.current().nextInt(-50, 50)),
-						new Point(ThreadLocalRandom.current().nextInt(-100, 100),
-								ThreadLocalRandom.current().nextInt(-100, 100)),
-						ThreadLocalRandom.current().nextDouble(massMin * 10e10, massMax * 10e10 + 1), size);
-			}
+			/*
+			 * for (int i = 0; i < numBodies; i++) { double size =
+			 * ThreadLocalRandom.current().nextDouble(sizeMin, sizeMax + 1); new
+			 * Body( new Point( (int) (size + ((i > 0) ?
+			 * Body.getAllbodies().get(i - 1).getRadius() +
+			 * Body.getAllbodies().get(i - 1).getPosition().getX() : 0)),
+			 * ThreadLocalRandom.current().nextInt(0, 2000)), new
+			 * Point(ThreadLocalRandom.current().nextInt(-50, 50),
+			 * ThreadLocalRandom.current().nextInt(-50, 50)), new
+			 * Point(ThreadLocalRandom.current().nextInt(-100, 100),
+			 * ThreadLocalRandom.current().nextInt(-100, 100)),
+			 * ThreadLocalRandom.current().nextDouble(massMin * 10e10, massMax *
+			 * 10e10 + 1), size); }
+			 */
+
+			// Left collision
+			new Body(new Point(500, 1050), new Point(2, 0), new Point(1, 1), 100, 100);
+
+			// Top collision
+			new Body(new Point(1050, 500), new Point(0, 2), new Point(1, 1), 100, 100);
+
+			// Right collision
+			new Body(new Point(1650, 1050), new Point(-2, 0), new Point(1, 1), 100, 100);
+
+			// Bottom collision
+			new Body(new Point(1050, 1650), new Point(0, -2), new Point(1, 1), 100, 100);
+
+			// Collision
+			new Body(new Point(1050, 1050), new Point(0, 0), new Point(1, 1), 300, 400);
+
 			sim = new Simulation(numOfThreads, numBodies, -1);
 			Gui.frame.repaint();
 			sim.start();
 		}
 	}
 
-	private void reset() {
+	private void reset()
+	{
 		if (sim != null)
 			sim.setRunning(false);
 		Body.clear();
@@ -155,7 +178,8 @@ public class Gui {
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize() {
+	private void initialize()
+	{
 		frame = new JFrame();
 		frame.setBounds(100, 100, 734, 514);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -195,7 +219,7 @@ public class Gui {
 
 		Hashtable<Integer, JLabel> labelTable = new Hashtable<Integer, JLabel>();
 		for (int i = 0; i <= 10; i++)
-			labelTable.put(i * 10, new JLabel(String.format("%1$,.2f", i/10.0)));
+			labelTable.put(i * 10, new JLabel(String.format("%1$,.2f", i / 10.0)));
 		deltavSlider.setLabelTable(labelTable);
 		deltavSlider.setValue(0);
 		deltavSlider.addChangeListener(e -> {
@@ -240,20 +264,22 @@ public class Gui {
 		 * 
 		 * @see javax.swing.JComponent#paint(java.awt.Graphics)
 		 */
-		public void paint(Graphics g) {
+		public void paint(Graphics g)
+		{
 			super.paint(g);
 			for (int i = 0; i < Body.getAllbodies().size(); i++) {
 				Body body = Body.getAllbodies().get(i);
 				// fill starts at the top left of the Oval, position is at the
 				// center
-				g.fillOval((int) ((body.getPosition().getX() - body.getRadius()) * 1 / zoom),
-						(int) ((body.getPosition().getY() + body.getRadius()) * 1 / zoom),
-						(int) (body.getRadius() * 1 / zoom), (int) (body.getRadius() * 1 / zoom));
+				g.fillOval((int) ((body.getPosition().getX() - body.getRadius() + 1) * 1 / zoom),
+						(int) ((body.getPosition().getY() - body.getRadius() + 1) * 1 / zoom),
+						(int) (2 * body.getRadius() * 1 / zoom), (int) (2 * body.getRadius() * 1 / zoom));
 			}
 		}
 	}
 
-	public static void repaint() {
+	public static void repaint()
+	{
 		frame.repaint();
 	}
 
