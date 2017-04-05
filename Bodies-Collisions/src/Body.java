@@ -93,7 +93,6 @@ public class Body {
 					allBodies.get(i).velocity.getY() + deltav.getY());
 			allBodies.get(i).position.setLocation(allBodies.get(i).position.getX() + deltap.getX(),
 					allBodies.get(i).position.getY() + deltap.getY());
-			allBodies.get(i).force.setLocation(0, 0);
 		}
 	}
 
@@ -106,8 +105,7 @@ public class Body {
 		double XTop, Bottom, YTop, X2MinusX1, Y2MinusY1;
 		for (i = start; i < end; i++) {
 			for (int j = i + 1; j < allBodies.size(); j++) {
-				if (Math.abs(allBodies.get(i).position.distance(allBodies.get(j).position)) < (allBodies.get(i).radius
-						+ allBodies.get(j).radius)) {
+				if (Math.abs(allBodies.get(i).position.distance(allBodies.get(j).position)) <= (allBodies.get(i).radius+ allBodies.get(j).radius)) {
 					X2MinusX1 = allBodies.get(j).getPosition().getX() - allBodies.get(i).getPosition().getX();
 					Y2MinusY1 = allBodies.get(j).getPosition().getY() - allBodies.get(i).getPosition().getY();
 					XTop = (allBodies.get(j).getVelocity().getX() * Math.pow(X2MinusX1, 2))

@@ -12,7 +12,7 @@ public class Simulation extends Thread {
 
 	private static boolean running = true;
 	private static boolean paused = false;
-	private static double deltat = 0.5;
+	private static double deltat = 0;
 	private static int numberOfThreads;
 	private static int maxIterations;
 	private static int numberOfObjects;
@@ -91,13 +91,11 @@ public class Simulation extends Thread {
 		@Override
 		public void run() {
 			super.run();
-			System.out.println("Thread " + threadID + " entered start : " + start + " end : " + end);
 			try {
 				wait.acquire();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			System.out.println("Thread " + threadID + " starting start : " + start + " end : " + end);
 			while (running) {
 				if (!paused) {
 					if(threadID == 0)
@@ -112,12 +110,10 @@ public class Simulation extends Thread {
 					if(threadID == 0 && Gui.isActive)
 						Gui.repaint();
 					try {
-						Thread.sleep(10);
+						Thread.sleep(50);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
-					}
-					System.out.println("Thread " + threadID + " finished start : " + start + " end : " + end);
-					
+					}					
 				}
 			}
 		}

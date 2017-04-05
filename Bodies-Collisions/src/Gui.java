@@ -117,20 +117,13 @@ public class Gui {
 						new Point(
 								(int) (size + ((i > 0) ? Body.getAllbodies().get(i - 1).getRadius()
 										+ Body.getAllbodies().get(i - 1).getPosition().getX() : 0)),
-								ThreadLocalRandom.current().nextInt(-300, 300)),
+								ThreadLocalRandom.current().nextInt(0, 2000)),
 						new Point(ThreadLocalRandom.current().nextInt(-50, 50),
 								ThreadLocalRandom.current().nextInt(-50, 50)),
 						new Point(ThreadLocalRandom.current().nextInt(-100, 100),
 								ThreadLocalRandom.current().nextInt(-100, 100)),
 						ThreadLocalRandom.current().nextDouble(massMin * 10e10, massMax * 10e10 + 1), size);
 			}
-
-			// new Body(new Point(50, 5), new Point(0, 2), new Point(300, 300),
-			// (400), 30);
-			// new Body(new Point(30, 300), new Point(0, -2), new Point(1, 2),
-			// (20), 10);
-			// new Body(new Point(90, 500), new Point(-1, -5), new Point(110,
-			// 110), (100), 50);
 			sim = new Simulation(numOfThreads, numBodies, -1);
 			Gui.frame.repaint();
 			sim.start();
@@ -195,18 +188,18 @@ public class Gui {
 		JLabel lblDeltaV = new JLabel("Delta V");
 		deltavPanel.add(lblDeltaV);
 
-		JLabel deltavValue = new JLabel("1");
+		JLabel deltavValue = new JLabel("0");
 
 		JSlider deltavSlider = new JSlider();
 		deltavSlider.setMajorTickSpacing(10);
 
 		Hashtable<Integer, JLabel> labelTable = new Hashtable<Integer, JLabel>();
 		for (int i = 0; i <= 10; i++)
-			labelTable.put(i * 10, new JLabel(String.format("%1$,.0f", Math.pow(i, 3))));
+			labelTable.put(i * 10, new JLabel(String.format("%1$,.2f", i/10.0)));
 		deltavSlider.setLabelTable(labelTable);
-		deltavSlider.setValue(10);
+		deltavSlider.setValue(0);
 		deltavSlider.addChangeListener(e -> {
-			double newdeltaT = Math.pow(deltavSlider.getValue() / 10.0, 3);
+			double newdeltaT = deltavSlider.getValue() / 100.0;
 			deltavValue.setText(String.format("%1$,.2f", newdeltaT));
 			if (sim != null)
 				sim.setDeltat(newdeltaT);
