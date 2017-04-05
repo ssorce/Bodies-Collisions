@@ -98,6 +98,8 @@ public class Simulation extends Thread {
 		@Override
 		public void run()
 		{
+			int loop = 0;
+			int loopEnd = 200;
 			super.run();
 			try {
 				wait.acquire();
@@ -126,6 +128,9 @@ public class Simulation extends Thread {
 					}
 					else {
 						if (threadID == 0) {
+							if(loopEnd < loop)
+								running = false;
+							loop++;
 							for (int i = 0; i < Body.getAllbodies().size(); i++) {
 								System.out.println(i + ": " + Body.getAllbodies().get(i).getPosition());
 							}
