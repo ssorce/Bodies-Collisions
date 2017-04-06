@@ -31,12 +31,14 @@ public class Body {
 
 	public static void main(String args[])
 	{
-		int bodies, threads;
+		int bodies, threads, timeSteps;
 		Double massMin, massMax, radiusMin, radiusMax;
 		Simulation sim;
 		String str = new String();
-		if (args.length < 4) {
+		if (args.length < 5) {
 			Scanner keyboard = new Scanner(System.in);
+			System.out.print("How many threads: ");
+			threads = Integer.parseInt(keyboard.next());
 			System.out.print("How many bodies: ");
 			str = keyboard.next();
 			bodies = Integer.parseInt(str);
@@ -62,14 +64,13 @@ public class Body {
 				massMin = Double.parseDouble(str);
 				massMax = Double.parseDouble(str);
 			}
-			System.out.print("How many threads: ");
-			threads = Integer.parseInt(keyboard.next());
-
+			System.out.print("How many timesteps:");
+			timeSteps = Integer.parseInt(keyboard.next());
 		}
 		else {
-			str = args[0];
-			bodies = Integer.parseInt(str);
-			str = args[1];
+			threads = Integer.parseInt(args[0]);
+			bodies = Integer.parseInt(args[1]);
+			str = args[2];
 			if (str.contains("-")) {
 				String[] split = str.split("-");
 				radiusMin = Double.parseDouble(split[0]);
@@ -79,7 +80,7 @@ public class Body {
 				radiusMin = Double.parseDouble(str);
 				radiusMax = Double.parseDouble(str);
 			}
-			str = args[2];
+			str = args[3];
 			if (str.contains("-")) {
 				String[] split = str.split("-");
 				massMin = Double.parseDouble(split[0]);
@@ -89,7 +90,7 @@ public class Body {
 				massMin = Double.parseDouble(str);
 				massMax = Double.parseDouble(str);
 			}
-			threads = Integer.parseInt(args[3]);
+			timeSteps = Integer.parseInt(args[4]);
 		}
 
 		for (int i = 0; i < bodies; i++) {
@@ -106,7 +107,7 @@ public class Body {
 					ThreadLocalRandom.current().nextDouble(massMin * 10e10, massMax * 10e10 + 1), size);
 		}
 
-		sim = new Simulation(threads, bodies, -1, false);
+		sim = new Simulation(threads, bodies, timeSteps);
 		sim.start();
 	}
 

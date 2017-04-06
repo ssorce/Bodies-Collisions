@@ -131,7 +131,7 @@ public class Gui {
 						ThreadLocalRandom.current().nextDouble(massMin * 10e10, massMax * 10e10 + 1), size);
 			}
 
-			sim = new Simulation(numOfThreads, numBodies, -1, true);
+			sim = new Simulation(numOfThreads, numBodies, -1);
 			Gui.frame.repaint();
 			sim.start();
 		}
@@ -155,7 +155,7 @@ public class Gui {
 							ThreadLocalRandom.current().nextInt(-100, 100)),
 					ThreadLocalRandom.current().nextDouble(massMin * 10e10, massMax * 10e10 + 1), size);
 		}
-		sim = new Simulation(numOfThreads, numBodies, -1, true);
+		sim = new Simulation(numOfThreads, numBodies, -1);
 		Gui.frame.repaint();
 		sim.start();
 		sim.setRunning(true);
