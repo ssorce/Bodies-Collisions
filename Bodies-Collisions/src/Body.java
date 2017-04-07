@@ -25,6 +25,7 @@ public class Body {
 	private Point force;
 	private final double mass;
 	private final double radius;
+	public static long numCollisions = 0;
 	private static final ArrayList<Body> allBodies = new ArrayList<>();
 	private static double gravity = 6.67e-11;
 	private static double deltaTime;
@@ -220,11 +221,19 @@ public class Body {
 							- (allBodies.get(j).getVelocity().getX() * Y2MinusY1 * X2MinusX1)
 							+ (allBodies.get(j).getVelocity().getY() * Math.pow(X2MinusX1, 2));
 					allBodies.get(j).velocity.setLocation(XTop / Bottom, YTop / Bottom);
-					System.out.println("Collision with centers of:\n" + allBodies.get(i).getPosition() + "\n"
-							+ allBodies.get(j).getPosition());
+					numCollisions++;
 				}
 			}
 		}
+	}
+	
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "\tPosition\tx=" + this.position.getX()+"\ty="+this.position.getY()+"\tVelocity\tx="+this.velocity.getX()+"\ty="+this.velocity.getY();
 	}
 
 	public static void clear()

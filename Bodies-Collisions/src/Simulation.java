@@ -1,3 +1,5 @@
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.concurrent.Semaphore;
 
 /**
@@ -74,7 +76,16 @@ public class Simulation extends Thread {
 			}
 		}
 		long timeTwo = System.currentTimeMillis();
+		System.out.println("Collisions: " + Body.numCollisions);
 		System.out.println("Execution time: " + (timeTwo - timeOne));
+		try{
+		    PrintWriter writer = new PrintWriter("finalPositions.txt", "UTF-8");
+		    for(int i = 0; i < Body.getAllbodies().size(); i++){
+		    	writer.println("Body "+i+": "+Body.getAllbodies().get(i));
+		    }
+		    writer.close();
+		} catch (IOException e) {
+		}
 	}
 
 	private static class SimulationThread extends Thread {
@@ -134,10 +145,8 @@ public class Simulation extends Thread {
 							}
 						}
 					} else {
-						if (threadID == 0) {
-							for (int i = 0; i < Body.getAllbodies().size(); i++) {
-								System.out.println(i + ": " + Body.getAllbodies().get(i).getPosition());
-							}
+						for (int i = start; i < end; i++) {
+							System.out.println("Body "+i + ":" + Body.getAllbodies().get(i));
 						}
 						currentIteration++;
 						if(currentIteration >= maxIterations)
