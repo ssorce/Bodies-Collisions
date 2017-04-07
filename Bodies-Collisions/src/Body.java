@@ -67,6 +67,7 @@ public class Body {
 			}
 			System.out.print("How many timesteps:");
 			timeSteps = Integer.parseInt(keyboard.next());
+			keyboard.close();
 		}
 		else {
 			threads = Integer.parseInt(args[0]);
