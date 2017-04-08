@@ -34,7 +34,6 @@ public class Simulation extends Thread {
 			deltat = 0.5;
 		int stages = (int) Math.ceil(Math.log(numberOfThreads) / Math.log(2 + 1e-10));
 	}
-	
 
 	/**
 	 * Constructor for a multithreaded simulation
@@ -52,7 +51,8 @@ public class Simulation extends Thread {
 	 * @see java.lang.Thread#run()
 	 */
 	@Override
-	public void run() {
+	public void run()
+	{
 		int stages = (int) Math.ceil(Math.log(numberOfThreads) / Math.log(2 + 1e-10));
 		int workasigned = 0;
 		threads = new SimulationThread[numberOfThreads];
@@ -78,12 +78,12 @@ public class Simulation extends Thread {
 		long timeTwo = System.currentTimeMillis();
 		System.out.println("Collisions: " + Body.numCollisions);
 		System.out.println("Execution time: " + (timeTwo - timeOne));
-		try{
-		    PrintWriter writer = new PrintWriter("finalPositions.txt", "UTF-8");
-		    for(int i = 0; i < Body.getAllbodies().size(); i++){
-		    	writer.println("Body "+i+": "+Body.getAllbodies().get(i));
-		    }
-		    writer.close();
+		try {
+			PrintWriter writer = new PrintWriter("finalPositions.txt", "UTF-8");
+			for (int i = 0; i < Body.getAllbodies().size(); i++) {
+				writer.println("Body " + i + ": " + Body.getAllbodies().get(i));
+			}
+			writer.close();
 		} catch (IOException e) {
 		}
 	}
@@ -117,7 +117,8 @@ public class Simulation extends Thread {
 		 * @see java.lang.Thread#run()
 		 */
 		@Override
-		public void run() {
+		public void run()
+		{
 			super.run();
 			try {
 				wait.acquire();
@@ -144,19 +145,24 @@ public class Simulation extends Thread {
 								e.printStackTrace();
 							}
 						}
-					} else {
+					}
+					else {
 						for (int i = start; i < end; i++) {
-							System.out.println("Body "+i + ":" + Body.getAllbodies().get(i));
+							System.out.println("Body " + i + ":" + Body.getAllbodies().get(i));
 						}
+
+					}
+					if (maxIterations != -1) {
 						currentIteration++;
-						if(currentIteration >= maxIterations)
+						if (currentIteration >= maxIterations)
 							break;
 					}
 				}
 			}
 		}
 
-		private void barrier() {
+		private void barrier()
+		{
 			if (numberOfThreads != 1) {
 				for (int i = 0; i < stages; i++) {
 					try {
@@ -173,7 +179,8 @@ public class Simulation extends Thread {
 	/**
 	 * @return the running
 	 */
-	public boolean isRunning() {
+	public boolean isRunning()
+	{
 		return running;
 	}
 
@@ -181,14 +188,16 @@ public class Simulation extends Thread {
 	 * @param running
 	 *            the running to set
 	 */
-	public void setRunning(boolean running) {
+	public void setRunning(boolean running)
+	{
 		Simulation.running = running;
 	}
 
 	/**
 	 * @return the paused
 	 */
-	public boolean isPaused() {
+	public boolean isPaused()
+	{
 		return paused;
 	}
 
@@ -196,14 +205,16 @@ public class Simulation extends Thread {
 	 * @param paused
 	 *            the paused to set
 	 */
-	public void setPaused(boolean paused) {
+	public void setPaused(boolean paused)
+	{
 		Simulation.paused = paused;
 	}
 
 	/**
 	 * @return the deltat
 	 */
-	public double getDeltat() {
+	public double getDeltat()
+	{
 		return deltat;
 	}
 
@@ -211,7 +222,8 @@ public class Simulation extends Thread {
 	 * @param deltat
 	 *            the deltat to set
 	 */
-	public void setDeltat(double deltat) {
+	public void setDeltat(double deltat)
+	{
 		Simulation.deltat = deltat;
 	}
 
