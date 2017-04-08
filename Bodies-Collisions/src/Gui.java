@@ -38,7 +38,7 @@ public class Gui {
 	private static double massMax = 50;
 	private static int numOfThreads = 1;
 	public static boolean isActive = false;
-	public static int iterations = -1;
+
 	/**
 	 * Launch the application.
 	 */
@@ -75,7 +75,6 @@ public class Gui {
 		JTextField numberOfBodies = new JTextField();
 		JTextField sizeOfBodies = new JTextField();
 		JTextField massOfBodies = new JTextField();
-		JTextField iteratationsNumber = new JTextField();
 		ButtonGroup sp = new ButtonGroup();
 		JRadioButton sequential = new JRadioButton();
 		JRadioButton parallel = new JRadioButton();
@@ -88,7 +87,7 @@ public class Gui {
 		svp.add(parallel);
 		final JComponent[] inputs = new JComponent[] { new JLabel("Number of Threads"), numberOfThreads,
 				new JLabel("Number of Bodies"), numberOfBodies, new JLabel("Size of Bodies"), sizeOfBodies,
-				new JLabel("Mass of Bodies"), massOfBodies, new JLabel("Number of iterations"),iteratationsNumber, svp };
+				new JLabel("Mass of Bodies"), massOfBodies, svp };
 		int result = JOptionPane.showConfirmDialog(Gui.frame, inputs, "New Simulation Setup",
 				JOptionPane.PLAIN_MESSAGE);
 		if (result == JOptionPane.OK_OPTION) {
@@ -131,12 +130,8 @@ public class Gui {
 								ThreadLocalRandom.current().nextInt(-100, 100)),
 						ThreadLocalRandom.current().nextDouble(massMin * 10e10, massMax * 10e10 + 1), size);
 			}
-			if(iteratationsNumber.getText().length() > 0)
-			{
-				iterations = Integer.parseInt(iteratationsNumber.getText());
-			}
 
-			sim = new Simulation(numOfThreads, numBodies, iterations);
+			sim = new Simulation(numOfThreads, numBodies, -1);
 			Gui.frame.repaint();
 			sim.start();
 		}
